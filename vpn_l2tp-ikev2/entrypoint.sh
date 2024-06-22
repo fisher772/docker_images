@@ -63,6 +63,18 @@ sysctl -w net.ipv4.conf.default.rp_filter=0
 sysctl -w net.ipv4.conf.eth0.send_redirects=0
 sysctl -w net.ipv4.conf.eth0.rp_filter=0
 
+# mount vars in conf files
+export $(grep -v '^#' /tmp/.env | xargs)
+
+sed -i "s/\${VPN_ROUTE_RANGE}/$VPN_ROUTE_RANGE/g" /etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf
+sed -i "s/\${VPN_DOMAIN}/$VPN_DOMAIN/g" /etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf
+sed -i "s/\${IPSEC_RDNS}/$IPSEC_RDNS/g" /etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf
+
+sed -i "s/\${XL2TPD_IPRANGE}/$XL2TPD_IPRANGE/g" /etc/xl2tpd/xl2tpd.conf
+sed -i "s/\${XL2TPD_IPLOCAL}/$XL2TPD_IPLOCAL/g" /etc/xl2tpd/xl2tpd.conf
+sed -i "s/\${XL2TPD_DNS1}/$XL2TPD_DNS1/g" /etc/ppp/options.xl2tpd
+sed -i "s/\${XL2TPD_DNS2}/$XL2TPD_DNS2/g" /etc/ppp/options.xl2tpd
+
 # create eap-user creds. to automatically add a new vpn user, use the script with the --adduser argument
 create_user() {
     local eap_user_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
