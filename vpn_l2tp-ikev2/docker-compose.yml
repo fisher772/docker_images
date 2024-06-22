@@ -1,17 +1,21 @@
-version: '3.0'
 services:
-  strongswan:
-    image: fisherdevops/vpn-strongswan
+  vpn-strongswan:
+    image: fisherdevops/vpn-strongswan:v1
     container_name: vpn-strongswan
     privileged: true
     network_mode: host
     environment:
-      - IPTABLES=true
-      - IPTABLES_INTERFACE=eth0
-      - IPTABLES_ENDPOINTS=10.1.1.0/32
+      - IPTABLES=${STATUS}
+      - IPTABLES_INTERFACE=${NET}
+      - IPTABLES_ENDPOINTS=${VPN_ROUTE_RANGE}
     volumes:
-      - /lib/modules:/lib/modules:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/ipsec.d:/etc/ipsec.d:ro
-      - /etc/xl2tpd:/etc/xl2tpd:ro
-      - /etc/ppp:/etc/ppp:ro
+      - other:/etc/localtime:ro
+      - ipsec.d:/etc/ipsec.d:rw
+      - xl2tpd:/etc/xl2tpd:rw
+      - ppp:/etc/ppp:rw
+
+volumes:
+  other:
+  ipsec.d:
+  xl2tpd:
+  ppp:

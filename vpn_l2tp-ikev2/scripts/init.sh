@@ -1,13 +1,16 @@
-#!/bin/sh -e
+#!/bin/bash
 #
 # entrypoint for strongswan
 #
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
+DIRS=("users_creds")
 PATH_KEYS=/etc/ipsec.d
-PATH_CONF=/etc/ipsec.conf
+PATH_IPSEC=/etc/ipsec.d/ipsec.docker
+PATH_IPSEC_CONF=/etc/ipsec.conf
 PATH_IPSEC_SECRETS=/etc/ipsec.secrets
+PATH_IPSEC_DOCKER_SECRETS=/etc/ipsec.d/ipsec.docker/ipsec.docker.secrets
 PATH_CHAP_SECRETS=/etc/ppp/chap-secrets
 
 ROUTE_RANGE=${VPN_ROUTE_RANGE}
@@ -16,10 +19,9 @@ CERT_C=${VPN_CERT_C}
 CERT_O=${VPN_CERT_O}
 CERT_CN=${VPN_CERT_CN}
 
-# create creds dir
-create_dir() {
-  mkdir -p "$PATH_KEYS"/{cacerts,certs,private,users_creds}
-}
+for dir in "${DIRS[@]}"; do
+    mkdir -p "$PATH_IPSEC/$dir"
+done
 
 # create server creds
 create_keys() {
@@ -42,17 +44,23 @@ create_user() {
     local eap_user_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
     local eap_user_pw=$(openssl rand -base64 24)
     local psk_user_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
-    local psk_user_pw=$(openssl rand -base64 24)  
+    local psk_user_pw=$(openssl rand -base64 24)
     local psk_user_key=$(openssl rand -base64 48)
 
-    cat > "$PATH_CONF" <<EOF
+    cat > "$PATH_IPSEC_CONF" <<EOF
 # ipsec.conf - strongSwan IPsec configuration file
 
-include /etc/ipsec.d/*.conf
+include /etc/ipsec.d/ipsec.docker/*.conf
 EOF
 
-    cat >> "$PATH_IPSEC_SECRETS" <<EOF
+    cat > "$PATH_IPSEC_SECRETS" <<EOF
 # /etc/ipsec.secrets - strongSwan IPsec secrets file
+
+include /etc/ipsec.d/ipsec.docker/*.secrets
+EOF
+
+    cat > "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
+# /etc/ipsec.d/ipsec.docker/ipsec.docker.secrets - strongSwan IPsec secrets file
 
 %any %any : PSK "$psk_user_key"
 
@@ -60,28 +68,29 @@ EOF
 
 $eap_user_name : EAP "$eap_user_pw"
 EOF
+    chmod 0600 /etc/ipsec.d/ipsec.docker/ipsec.docker.secrets
 
     cat >> "$PATH_CHAP_SECRETS" <<EOF
 # Secrets for authentication using CHAP
 
 $psk_user_name    l2tpd-psk     "$psk_user_pw"         *
 EOF
+    chmod 0600 /etc/ppp/chap-secrets
 
-    cat > "$PATH_KEYS/users_creds/psk_${psk_user_name}.txt" <<EOF
+    cat > "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt" <<EOF
 user: $psk_user_name
 password: $psk_user_pw
 EOF
-    chmod 0600 "$PATH_KEYS/users_creds/psk_${psk_user_name}.txt"
+    chmod 0600 "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt"
 
-    cat > "$PATH_KEYS/users_creds/ikev_${eap_user_name}.txt" <<EOF
+    cat > "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt" <<EOF
 user: $eap_user_name
 password: $eap_user_pw
 EOF
-    chmod 0600 "$PATH_KEYS/users_creds/ikev_${eap_user_name}.txt"
+    chmod 0600 "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt"
 }
 
 setup() {
-  create_dir
   create_keys
   create_user
 }
