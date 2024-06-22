@@ -1,5 +1,5 @@
-ms-dns 8.8.8.8
-ms-dns 8.8.4.4
+ms-dns ${XL2TPD_DNS1}
+ms-dns ${XL2TPD_DNS2}
 asyncmap 0
 auth
 crtscts
