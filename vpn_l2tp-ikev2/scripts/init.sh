@@ -50,16 +50,16 @@ create_user() {
     cat > "$PATH_IPSEC_CONF" <<EOF
 # ipsec.conf - strongSwan IPsec configuration file
 
-include /etc/ipsec.d/ipsec.docker/*.conf
+include "$PATH_IPSEC"/*.conf
 EOF
 
     cat > "$PATH_IPSEC_SECRETS" <<EOF
 # /etc/ipsec.secrets - strongSwan IPsec secrets file
 
-include /etc/ipsec.d/ipsec.docker/*.secrets
+include "$PATH_IPSEC"/*.secrets
 EOF
 
-    cat > "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
+    cat >> "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
 # /etc/ipsec.d/ipsec.docker/ipsec.docker.secrets - strongSwan IPsec secrets file
 
 %any %any : PSK "$psk_user_key"
@@ -68,14 +68,14 @@ EOF
 
 $eap_user_name : EAP "$eap_user_pw"
 EOF
-    chmod 0600 /etc/ipsec.d/ipsec.docker/ipsec.docker.secrets
+    chmod 0600 "$PATH_IPSEC_DOCKER_SECRETS"
 
     cat >> "$PATH_CHAP_SECRETS" <<EOF
 # Secrets for authentication using CHAP
 
 $psk_user_name    l2tpd-psk     "$psk_user_pw"         *
 EOF
-    chmod 0600 /etc/ppp/chap-secrets
+    chmod 0600 "$PATH_CHAP_SECRETS"
 
     cat > "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt" <<EOF
 user: $psk_user_name

@@ -1,21 +1,21 @@
 services:
   vpn-strongswan:
-    image: fisherdevops/vpn-strongswan:v1
+    image: fisher772/vpn-strongswan:v1
     container_name: vpn-strongswan
     privileged: true
     network_mode: host
+    restart: always
     environment:
+      - TZ=${EKB}
       - IPTABLES=${STATUS}
       - IPTABLES_INTERFACE=${NET}
-      - IPTABLES_ENDPOINTS=${VPN_ROUTE_RANGE}
+      - IPTABLES_ENDPOINTS=${IPTAB_ROUTE_RANGE}
     volumes:
-      - other:/etc/localtime:ro
       - ipsec.d:/etc/ipsec.d:rw
       - xl2tpd:/etc/xl2tpd:rw
       - ppp:/etc/ppp:rw
 
 volumes:
-  other:
   ipsec.d:
   xl2tpd:
   ppp:
