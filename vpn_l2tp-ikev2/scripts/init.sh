@@ -50,13 +50,13 @@ create_user() {
     cat > "$PATH_IPSEC_CONF" <<EOF
 # ipsec.conf - strongSwan IPsec configuration file
 
-include "$PATH_IPSEC"/*.conf
+include ${PATH_IPSEC}/*.conf
 EOF
 
     cat > "$PATH_IPSEC_SECRETS" <<EOF
 # /etc/ipsec.secrets - strongSwan IPsec secrets file
 
-include "$PATH_IPSEC"/*.secrets
+include ${PATH_IPSEC}/*.secrets
 EOF
 
     cat >> "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
