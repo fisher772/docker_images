@@ -1,6 +1,6 @@
 services:
   vpn-strongswan:
-    image: fisher772/vpn-strongswan:v1
+    image: fisher/vpn-strongswan
     container_name: vpn-strongswan
     privileged: true
     network_mode: host

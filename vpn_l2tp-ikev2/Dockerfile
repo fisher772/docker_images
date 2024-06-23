@@ -7,8 +7,6 @@ ARG ENV_FILE=.env
 
 COPY $ENV_FILE /tmp/.env
 
-RUN if [ -f /tmp/.env ]; then export $(cat /tmp/.env | xargs); fi
-
 COPY settings/ipsec.docker.secrets /etc/ipsec.d/ipsec.docker/ipsec.docker.secrets
 
 COPY scripts/init.sh /init.sh
