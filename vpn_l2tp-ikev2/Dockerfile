@@ -26,6 +26,7 @@ COPY settings/options.xl2tpd /etc/ppp/options.xl2tpd
 COPY settings/10-charon-logging.conf /etc/strongswan.d/10-charon-logging.conf
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 0755 /entrypoint.sh
+
 RUN echo '%ipsec ALL=NOPASSWD:SETENV:/usr/sbin/ipsec' > /etc/sudoers.d/ipsec
 RUN chmod 0440 /etc/sudoers.d/ipsec
 
