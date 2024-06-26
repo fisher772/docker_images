@@ -12,9 +12,7 @@ PATH_IPSEC_CONF=/etc/ipsec.conf
 PATH_IPSEC_SECRETS=/etc/ipsec.secrets
 PATH_IPSEC_DOCKER_SECRETS=/etc/ipsec.d/ipsec.docker/ipsec.docker.secrets
 PATH_CHAP_SECRETS=/etc/ppp/chap-secrets
-PATH_LOG_CONF=
-PATH_DIR_CONF=
-PATH_
+PATH_LOG_CONF=/etc/rsyslog.conf
 
 ROUTE_RANGE=${VPN_ROUTE_RANGE}
 DOMAIN=${VPN_DOMAIN}

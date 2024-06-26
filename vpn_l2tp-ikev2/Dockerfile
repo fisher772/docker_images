@@ -24,8 +24,6 @@ COPY settings/xl2tpd.conf /etc/xl2tpd/xl2tpd.conf
 COPY settings/options.xl2tpd /etc/ppp/options.xl2tpd
 
 COPY settings/10-charon-logging.conf /etc/strongswan.d/10-charon-logging.conf
-RUN chmod 0644 /etc/strongswan.d/10-charon-logging.conf
-
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 0755 /entrypoint.sh
 
