@@ -12,6 +12,9 @@ PATH_IPSEC_CONF=/etc/ipsec.conf
 PATH_IPSEC_SECRETS=/etc/ipsec.secrets
 PATH_IPSEC_DOCKER_SECRETS=/etc/ipsec.d/ipsec.docker/ipsec.docker.secrets
 PATH_CHAP_SECRETS=/etc/ppp/chap-secrets
+PATH_LOG_CONF=
+PATH_DIR_CONF=
+PATH_
 
 ROUTE_RANGE=${VPN_ROUTE_RANGE}
 DOMAIN=${VPN_DOMAIN}
@@ -22,6 +25,9 @@ CERT_CN=${VPN_CERT_CN}
 for dir in "${DIRS[@]}"; do
     mkdir -p "$PATH_IPSEC/$dir"
 done
+
+mkdir -p /etc/rsyslog.d
+mkdir -p /var/log/vpn
 
 # create server creds
 create_keys() {
@@ -46,6 +52,14 @@ create_user() {
     local psk_user_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
     local psk_user_pw=$(openssl rand -base64 24)
     local psk_user_key=$(openssl rand -base64 48)
+
+cat >> /etc/rsyslog.conf <<EOF
+
+$ActionFileRotateInterval day
+$ActionFileCreateDiskspace 10M
+$ActionFileNumberOfBackups 30
+$ActionFileRemoveOldest "yes"
+EOF
 
     cat > "$PATH_IPSEC_CONF" <<EOF
 # ipsec.conf - strongSwan IPsec configuration file
