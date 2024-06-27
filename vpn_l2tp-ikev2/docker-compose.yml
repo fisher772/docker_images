@@ -1,7 +1,10 @@
+---
+
 services:
   vpn-strongswan:
     image: fisher/vpn-strongswan
     container_name: vpn-strongswan
+    hostname: vpn-strongswan
     privileged: true
     network_mode: host
     restart: always
@@ -12,10 +15,14 @@ services:
       - IPTABLES_ENDPOINTS=${IPTAB_ROUTE_RANGE}
     volumes:
       - ipsec.d:/etc/ipsec.d:rw
+      - strongswan.d:/etc/strongswan.d
       - xl2tpd:/etc/xl2tpd:rw
       - ppp:/etc/ppp:rw
+      - logs:/var/log/vpn
 
 volumes:
   ipsec.d:
+  strongswan.d:
   xl2tpd:
   ppp:
+  logs:
