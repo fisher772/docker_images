@@ -1,5 +1,9 @@
 FROM nginx:stable-alpine-slim
 
+COPY entrypoint.sh /entrypoint.sh
+
+COPY scripts/le.sh /le.sh
+
 RUN \
  rm /etc/nginx/conf.d/default.conf && \
  chmod +x /entrypoint.sh && \
@@ -14,9 +18,5 @@ RUN mkdir -p /etc/rsyslog.d
 COPY settings/20-nginx.conf /etc/rsyslog.d/20-nginx.conf
 
 COPY settings/nginx.conf /etc/nginx/nginx.conf
-
-COPY entrypoint.sh /entrypoint.sh
-
-COPY scripts/le.sh /le.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
