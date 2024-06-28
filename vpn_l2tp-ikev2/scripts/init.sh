@@ -57,10 +57,10 @@ else
     cat >> /etc/rsyslog.conf <<EOF
 # fisher script
 
-$ActionFileRotateInterval day
-$ActionFileCreateDiskspace 10M
-$ActionFileNumberOfBackups 30
-$ActionFileRemoveOldest "yes"
+\$ActionFileRotateInterval day
+\$ActionFileCreateDiskspace 10M
+\$ActionFileNumberOfBackups 30
+\$ActionFileRemoveOldest "yes"
 EOF
 fi
 

@@ -12,21 +12,26 @@ services:
       - '8080-8082:8080-8082'
       - '8443-8445:44301-44303'
     volumes:
-      - sites-availables:/etc/nginx/sites-availables:rw
-      - conf:/etc/nginx/nginx.conf
+      - ssl:/etc/nginx/ssl
+      - conf:/etc/nginx
       - logs:/var/log/nginx
     environment:
-        - TZ=${EKB}
-        - LETSENCRYPT=${STATUS}
-        - LE_EMAIL=${EMAIL}
-        - LE_FQDN=${FQDN}
-        #- SSL_CERT=le-crt.pem
-        #- SSL_KEY=le-key.pem
-        #- SSL_CHAIN_CERT=le-chain-crt.pem
-        #- LE_ADDITIONAL_OPTIONS='--preferred-chain "ISRG Root X1"'
+      - TZ=${EKB}
+      - LETSENCRYPT=${STATUS}
+      - LE_EMAIL=${EMAIL}
+      - LE_FQDN=${FQDN}
+      #- SSL_CERT=le-crt.pem
+      #- SSL_KEY=le-key.pem
+      #- SSL_CHAIN_CERT=le-chain-crt.pem
+      #- LE_ADDITIONAL_OPTIONS='--preferred-chain "ISRG Root X1"'
     networks:
-      - proxy
+      - nginx
 
 networks:
-  proxy:
+  nginx:
     external: true
+
+volumes:
+  ssl:
+  conf:
+  logs:

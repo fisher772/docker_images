@@ -1,0 +1,21 @@
+---
+
+services:
+  vaultwarden:
+    image: vaultwarden/server
+    container_name: vaultwarden
+    hostname: vaultwarden
+    restart: unless-stopped
+    volumes:
+      - data:/data/
+    environment:
+      - TZ=${EKB}
+    networks:
+      - nginx
+
+networks:
+  nginx:
+    external: true
+
+volumes:
+  data:

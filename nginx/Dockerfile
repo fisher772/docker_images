@@ -4,7 +4,7 @@ RUN \
  rm /etc/nginx/conf.d/default.conf && \
  chmod +x /entrypoint.sh && \
  chmod +x /le.sh && \
- apk add --no-cache --update certbot tzdata openssl rsyslog
+ apk add --no-cache --update certbot tzdata openssl rsyslog bash
 
 ARG ENV_FILE=.env
 

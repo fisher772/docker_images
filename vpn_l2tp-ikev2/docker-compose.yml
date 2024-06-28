@@ -14,10 +14,10 @@ services:
       - IPTABLES_INTERFACE=${NET}
       - IPTABLES_ENDPOINTS=${IPTAB_ROUTE_RANGE}
     volumes:
-      - ipsec.d:/etc/ipsec.d:rw
+      - ipsec.d:/etc/ipsec.d
       - strongswan.d:/etc/strongswan.d
-      - xl2tpd:/etc/xl2tpd:rw
-      - ppp:/etc/ppp:rw
+      - xl2tpd:/etc/xl2tpd
+      - ppp:/etc/ppp
       - logs:/var/log/vpn
 
 volumes:

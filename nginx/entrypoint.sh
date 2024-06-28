@@ -13,10 +13,10 @@ else
     cat >> /etc/rsyslog.conf <<EOF
 # fisher script
 
-$ActionFileRotateInterval day
-$ActionFileCreateDiskspace 10M
-$ActionFileNumberOfBackups 30
-$ActionFileRemoveOldest "yes"
+\$ActionFileRotateInterval day
+\$ActionFileCreateDiskspace 10M
+\$ActionFileNumberOfBackups 30
+\$ActionFileRemoveOldest "yes"
 EOF
 fi
 
@@ -28,7 +28,7 @@ export LE_SSL_CHAIN_CERT=/etc/nginx/ssl/${SSL_CHAIN_CERT}
 
 #create configuration source directories, in case they are not mounted
 mkdir -p /etc/nginx/conf.d-le
-mkdir -p /etc/nginx/stream.conf.d-le
+mkdir -p /etc/nginx/stream.d-le
 
 #create destination directories
 mkdir -p /etc/nginx/conf.d
@@ -48,7 +48,7 @@ if [ ${#STREAMS_FILES} -ne 0 ]; then
 fi
 
 cp -fv /etc/nginx/conf.d-le/*.conf /etc/nginx/conf.d/
-cp -fv /etc/nginx/stream.conf.d-le/*.conf /etc/nginx/stream.conf.d/
+cp -fv /etc/nginx/stream.d-le/*.conf /etc/nginx/stream.d/
 
 #replace SSL_KEY, SSL_CERT and SSL_CHAIN_CERT by actual keys
 sed -i "s|SSL_KEY|${LE_SSL_KEY}|g" /etc/nginx/conf.d/*.conf 2>/dev/null
@@ -61,6 +61,8 @@ sed -i "s|SSL_CHAIN_CERT|${LE_SSL_CHAIN_CERT}|g" /etc/nginx/stream.d/*.conf 2>/d
 #replace LE_FQDN
 sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/conf.d/*.conf 2>/dev/null
 sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/stream.d/*.conf 2>/dev/null
+
+sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/conf.d/*.conf 2>/dev/null
 
 #generate dhparams.pem
 if [ ! -f /etc/nginx/ssl/dhparams.pem ]; then
