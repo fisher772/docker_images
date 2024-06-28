@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 RUN set -xe \
-    && apk add --no-cache sudo bash tzdata rsyslog \
+    && apk add --no-cache --update sudo bash tzdata rsyslog \
     iptables iptables-legacy openssl strongswan xl2tpd
 
 ARG ENV_FILE=.env
