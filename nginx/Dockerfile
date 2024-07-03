@@ -12,8 +12,6 @@ RUN \
 
 ARG ENV_FILE=.env
 
-COPY $ENV_FILE /tmp/.env
-
 RUN mkdir -p /etc/rsyslog.d
 COPY settings/20-nginx.conf /etc/rsyslog.d/20-nginx.conf
 
