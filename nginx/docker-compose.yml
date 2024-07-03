@@ -9,17 +9,19 @@ services:
     ports:
       - '80:80'
       - '443:443'
-      - '8080-8082:8080-8082'
-      - '8443-8445:44301-44303'
     volumes:
       - ssl:/etc/nginx/ssl
       - conf:/etc/nginx
       - logs:/var/log/nginx
+      - logs:/var/log/letsencrypt
     environment:
       - TZ=${EKB}
       - LETSENCRYPT=${STATUS}
       - LE_EMAIL=${EMAIL}
       - LE_FQDN=${FQDN}
+      - SERVER_ALIAS=${ALIAS}
+      - VPN_ADDRESSES=${SEC_IP}
+      - VPN_SEC=${SEC_STATUS}
       #- SSL_CERT=le-crt.pem
       #- SSL_KEY=le-key.pem
       #- SSL_CHAIN_CERT=le-chain-crt.pem

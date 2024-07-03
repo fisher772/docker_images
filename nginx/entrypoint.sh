@@ -59,10 +59,20 @@ sed -i "s|SSL_CHAIN_CERT|${LE_SSL_CHAIN_CERT}|g" /etc/nginx/conf.d/*.conf 2>/dev
 sed -i "s|SSL_CHAIN_CERT|${LE_SSL_CHAIN_CERT}|g" /etc/nginx/stream.d/*.conf 2>/dev/null
 
 #replace LE_FQDN
+sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/nginx.conf 2>/dev/null
 sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/conf.d/*.conf 2>/dev/null
 sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/stream.d/*.conf 2>/dev/null
 
-sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/conf.d/*.conf 2>/dev/null
+#replace SEC
+if [[ "$VPN_SEC" == "true" ]]; then
+    sed -i "s|allow all;|allow ${VPN_ADDRESSES};|g" /etc/nginx/conf.d/*.conf 2>/dev/null
+    sed -i "s|#deny all;|deny all;|g" /etc/nginx/conf.d/*.conf 2>/dev/null
+else
+    :
+fi
+
+#replace SERVER_ALIAS
+sed -i "s|SERVER_ALIAS|${SERVER_ALIAS}|g" /etc/nginx/stream.d/*.conf 2>/dev/null
 
 #generate dhparams.pem
 if [ ! -f /etc/nginx/ssl/dhparams.pem ]; then
