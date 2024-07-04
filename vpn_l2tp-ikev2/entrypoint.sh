@@ -130,9 +130,6 @@ else
     :
 fi
 
-
-
-
 # function to use when this script recieves a SIGTERM.
 term() {
   echo "Caught SIGTERM signal! Stopping ipsec..."
