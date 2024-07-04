@@ -11,6 +11,7 @@ RUN \
  apk add --no-cache --update bash certbot tzdata openssl rsyslog
 
 ARG ENV_FILE=.env
+ARG ENV_FILE=creds.env
 
 RUN mkdir -p /etc/rsyslog.d
 COPY settings/20-nginx.conf /etc/rsyslog.d/20-nginx.conf
