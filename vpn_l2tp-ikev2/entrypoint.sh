@@ -5,6 +5,9 @@
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
+PATH_IPSEC_DOCKER_SECRETS=/etc/ipsec.d/ipsec.docker/ipsec.docker.secrets
+PATH_IPSEC_CONF_REPLACE=/etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf
+
 INTERFACE=${IPTABLES_INTERFACE:+-i ${IPTABLES_INTERFACE}} # will be empty if not set
 ENDPOINTS=${IPTABLES_ENDPOINTS:+-s ${IPTABLES_ENDPOINTS}} # will be empty if not set
 D_ENDPOINTS=${IPTABLES_ENDPOINTS:+-d ${IPTABLES_ENDPOINTS}} # will be empty if not set
@@ -103,6 +106,32 @@ password: $eap_user_pw
 EOF
     chmod 0600 "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt"
 }
+
+# replace *.conf
+if [[ "$LE_CERT_STATUS" == "true" ]]; then
+    cat >> "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
+# /etc/ipsec.d/ipsec.docker/ipsec.docker.secrets - strongSwan IPsec secrets file
+
+%any %any : PSK "$psk_user_key"
+
+: RSA "fullchain.pem"
+
+$eap_user_name : EAP "$eap_user_pw"
+EOF
+
+else
+    :
+fi
+
+
+if [[ "$LE_CERT_STATUS" == "true" ]]; then
+    sed -i "s|leftcert=server-cert.pem|leftcert=fullchain.pem|g" /etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf 2>/dev/null
+else
+    :
+fi
+
+
+
 
 # function to use when this script recieves a SIGTERM.
 term() {

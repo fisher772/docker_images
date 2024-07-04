@@ -15,7 +15,7 @@ fi
 if [ -f ${LE_SSL_CERT} ] && openssl x509 -checkend ${renew_before} -noout -in ${LE_SSL_CERT} >/dev/null; then
     # egrep to remove leading whitespaces
     CERT_FQDNS=$(openssl x509 -in ${LE_SSL_CERT} -text -noout | egrep -o 'DNS.*')
-    set -- $(echo ${LE_FQDN} | tr ',' '\n')
+    set -- $(echo ${LE_CERT_CHAIN} | tr ',' '\n')
     MISSING=false
     for element in "$@"; do
         if ! echo "${CERT_FQDNS}" | grep -Eq "DNS:${element}(,|$)"; then
@@ -25,7 +25,7 @@ if [ -f ${LE_SSL_CERT} ] && openssl x509 -checkend ${renew_before} -noout -in ${
     done
     if $MISSING; then
         echo "letsencrypt certificate ${LE_SSL_CERT} is present, but doesn't contain expected domains"
-        echo "expected: ${LE_FQDN}"
+        echo "expected: ${LE_CERT_CHAIN}"
         echo "found:    ${CERT_FQDNS}"
     else
         echo "letsencrypt certificate ${LE_SSL_CERT} still valid"
@@ -43,14 +43,14 @@ if [ "$first_char" = "$last_char" ] && [ "$first_char" = "'" -o "$first_char" = 
 fi
 
 # Use the trimmed string when calling the command
-eval "certbot certonly -t -n --agree-tos --renew-by-default --email \"${LE_EMAIL}\" --webroot -w /usr/share/nginx/html -d ${LE_FQDN} ${LE_ADDITIONAL_OPTIONS_TRIMMED}"
+eval "certbot certonly -t -n --agree-tos --renew-by-default --email \"${LE_EMAIL}\" --webroot -w /usr/share/nginx/html -d ${LE_CERT_CHAIN} ${LE_ADDITIONAL_OPTIONS_TRIMMED}"
 le_result=$?
 if [ ${le_result} -ne 0 ]; then
     echo "failed to run certbot"
     return 1
 fi
 
-FIRST_FQDN=$(echo "$LE_FQDN" | cut -d"," -f1)
+FIRST_FQDN=$(echo "$LE_CERT_CHAIN" | cut -d"," -f1)
 cp -fv /etc/letsencrypt/live/${FIRST_FQDN}/privkey.pem ${LE_SSL_KEY}
 cp -fv /etc/letsencrypt/live/${FIRST_FQDN}/fullchain.pem ${LE_SSL_CERT}
 cp -fv /etc/letsencrypt/live/${FIRST_FQDN}/chain.pem ${LE_SSL_CHAIN_CERT}

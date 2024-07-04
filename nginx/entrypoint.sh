@@ -58,8 +58,8 @@ sed -i "s|SSL_CERT|${LE_SSL_CERT}|g" /etc/nginx/stream.d/*.conf 2>/dev/null
 sed -i "s|SSL_CHAIN_CERT|${LE_SSL_CHAIN_CERT}|g" /etc/nginx/conf.d/*.conf 2>/dev/null
 sed -i "s|SSL_CHAIN_CERT|${LE_SSL_CHAIN_CERT}|g" /etc/nginx/stream.d/*.conf 2>/dev/null
 
-#replace LE_FQDN
-sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/nginx.conf 2>/dev/null
+#replace LE_FQDN/LE_CERT_FQDN
+sed -i "s|LE_CERT_FQDN|${LE_CERT_FQDN}|g" /etc/nginx/nginx.conf 2>/dev/null
 sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/conf.d/*.conf 2>/dev/null
 sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/stream.d/*.conf 2>/dev/null
 

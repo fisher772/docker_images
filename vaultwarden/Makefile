@@ -10,8 +10,13 @@ VERSION:=$(shell bash -c 'read -p "Print new image version"')
 NGINX_MOUNT:=/var/lib/docker/volumes/nginx_conf/_data/conf.d-le
 
 REMOTE_REGISTRY_NAME?=""
+DOCKER_USER?=""
+DOCKER_TOKEN?=""
+
+ifeq ($(filter build tag push,$(MAKECMDGOALS)),build tag push)
 DOCKER_USER:=$(shell bash -c 'read -p -s "Print your docker username"')
 DOCKER_TOKEN:=$(shell bash -c 'read -p -s "Print your docker token"')
+endif
 
 copy:
 	@echo "Copying the conf nginx files..."
