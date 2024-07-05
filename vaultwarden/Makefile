@@ -44,7 +44,7 @@ clean:
 	${CONTAINER_RUNTIME} rmi ${FULL_IMAGE_NAME_LATEST}
 
 vars:
-	@scripts/make-vars.sh
+	@./make-vars.sh
 
 help:
 	@echo "Usage:"
