@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sed -i '/VERSION:=/ s/=.*//' Makefile
 
 sed -i '/DOCKER_USER:=/ s/=.*//' Makefile
