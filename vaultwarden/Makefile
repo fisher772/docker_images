@@ -43,6 +43,8 @@ clean:
 	${CONTAINER_RUNTIME} rmi ${FULL_IMAGE_NAME}
 	${CONTAINER_RUNTIME} rmi ${FULL_IMAGE_NAME_LATEST}
 
+all: build tag push clean
+
 vars:
 	@./make-vars.sh
 
@@ -52,5 +54,6 @@ help:
 	@echo "  make tag     - Tag the Docker image with version $(VERSION) and latest"
 	@echo "  make push    - Push the Docker image to the registry"
 	@echo "  make clean   - Remove the Docker image"
+	@echo "  make all     - Starting all blocks"
 	@echp "  make vars    - Use the automatic assignment of dynamic values for variables at your discretion"
 	@echo "  make help    - Display this help message"
