@@ -5,11 +5,12 @@ CONTAINER_RUNTIME?=$(shell which docker)
 IMAGE_NAME:=fisher/nginx-le
 FULL_IMAGE_NAME=${IMAGE_NAME}:${VERSION}
 FULL_IMAGE_NAME_LATEST=${IMAGE_NAME}:latest
-VERSION:=$(shell bash -c 'read -p "Print new image version"')
 
-REMOTE_REGISTRY_NAME?=""
-DOCKER_USER:=$(shell bash -c 'read -p -s "Print your docker username"')
-DOCKER_TOKEN:=$(shell bash -c 'read -p -s "Print your docker token"')
+VERSION:=
+
+REMOTE_REGISTRY_NAME:=
+DOCKER_USER:=
+DOCKER_TOKEN:=
 
 build:
 	@echo "Building the image..."
@@ -36,10 +37,14 @@ clean:
 	${CONTAINER_RUNTIME} rmi ${FULL_IMAGE_NAME}
 	${CONTAINER_RUNTIME} rmi ${FULL_IMAGE_NAME_LATEST}
 
+vars:
+	@scripts/test.sh
+
 help:
 	@echo "Usage:"
 	@echo "  make build   - Build the Docker image"
 	@echo "  make tag     - Tag the Docker image with version $(VERSION) and latest"
 	@echo "  make push    - Push the Docker image to the registry"
 	@echo "  make clean   - Remove the Docker image"
+	@echp "  make vars    - Use the automatic assignment of dynamic values for variables at your discretion"
 	@echo "  make help    - Display this help message"
