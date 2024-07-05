@@ -2,7 +2,7 @@
 
 CONTAINER_RUNTIME?=$(shell which docker)
 
-IMAGE_NAME:=fisher/vpn-strongswan
+IMAGE_NAME:=fisher772/vpn-strongswan
 FULL_IMAGE_NAME=${IMAGE_NAME}:${VERSION}
 FULL_IMAGE_NAME_LATEST=${IMAGE_NAME}:latest
 
