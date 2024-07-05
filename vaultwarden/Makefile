@@ -2,7 +2,7 @@
 
 CONTAINER_RUNTIME?=$(shell which docker)
 
-IMAGE_NAME:=fisher/vaultwarden
+IMAGE_NAME:=fisher772/vaultwarden
 FULL_IMAGE_NAME=${IMAGE_NAME}:${VERSION}
 FULL_IMAGE_NAME_LATEST=${IMAGE_NAME}:latest
 

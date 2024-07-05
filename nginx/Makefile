@@ -2,7 +2,7 @@
 
 CONTAINER_RUNTIME?=$(shell which docker)
 
-IMAGE_NAME:=fisher/nginx-le
+IMAGE_NAME:=fisher772/nginx-le
 FULL_IMAGE_NAME=${IMAGE_NAME}:${VERSION}
 FULL_IMAGE_NAME_LATEST=${IMAGE_NAME}:latest
 
