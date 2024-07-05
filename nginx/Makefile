@@ -29,7 +29,7 @@ tag:
 
 push:
 	@echo "Pushing the image..."
-	echo ${DOCKER_TOKEN} | ${CONTAINER_RUNTIME} login ${REMOTE_REGISTRY_NAME} --username ${DOCKER_USER} --password-stdin \
+	echo ${DOCKER_TOKEN} | ${CONTAINER_RUNTIME} login ${REMOTE_REGISTRY_NAME} --username ${DOCKER_USER} --password-stdin; \
 	${CONTAINER_RUNTIME} push ${FULL_IMAGE_NAME} && ${CONTAINER_RUNTIME} push ${FULL_IMAGE_NAME_LATEST}
 
 clean:
