@@ -2,7 +2,7 @@
 
 services:
   nginx:
-    image: fisher/nginx-le
+    image: fisher772/nginx-le
     container_name: nginx
     hostname: nginx
     restart: always
