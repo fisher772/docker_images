@@ -13,7 +13,7 @@ services:
       - strongswan.d:/etc/strongswan.d
       - xl2tpd:/etc/xl2tpd
       - ppp:/etc/ppp
-      - logs:/var/log/vpn
+      - logs:/var/log
     environment:
       - TZ=${EKB}
       - LE_CERT_STATUS=${CERT_STATUS}
