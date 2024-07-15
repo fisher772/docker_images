@@ -15,7 +15,7 @@ services:
       - ppp:/etc/ppp
       - logs:/var/log
     environment:
-      #- TZ=${EKB}
+      - TZ=${EKB}
       - LE_CERT_STATUS=${CERT_STATUS}
       - IPTABLES=${STATUS}
       - IPTABLES_INTERFACE=${NET}
