@@ -1,11 +1,10 @@
 #!/bin/bash
-#
-# entrypoint for strongswan
-#
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 PATH_IPSEC_DOCKER_SECRETS=/etc/ipsec.d/ipsec.docker/ipsec.docker.secrets
+PATH_XL2TPD_CONF=/etc/xl2tpd/xl2tpd.conf
+PATH_PPP_CONF=/etc/ppp/options.xl2tpd
 PATH_IPSEC_CONF_REPLACE=/etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf
 
 INTERFACE=${IPTABLES_INTERFACE:+-i ${IPTABLES_INTERFACE}} # will be empty if not set
@@ -14,7 +13,6 @@ D_ENDPOINTS=${IPTABLES_ENDPOINTS:+-d ${IPTABLES_ENDPOINTS}} # will be empty if n
 
 PATH_KEYS=/etc/ipsec.d
 PATH_IPSEC=/etc/ipsec.d/ipsec.docker
-PATH_IPSEC_SECRETS=/etc/ipsec.d/ipsec.docker/ipsec.docker.secrets
 PATH_CHAP_SECRETS=/etc/ppp/chap-secrets
 
 # add iptables rules if IPTABLES=true
@@ -69,14 +67,14 @@ sysctl -w net.ipv4.conf.eth0.rp_filter=0
 # mount vars in conf files
 export $(grep -v '^#' /tmp/.env | xargs)
 
-sed -i "s/\${VPN_ROUTE_RANGE}/$VPN_ROUTE_RANGE/g" /etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf
-sed -i "s/\${VPN_DOMAIN}/$VPN_DOMAIN/g" /etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf
-sed -i "s/\${IPSEC_RDNS}/$IPSEC_RDNS/g" /etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf
+sed -i "s/\${VPN_ROUTE_RANGE}/$VPN_ROUTE_RANGE/g" "$PATH_IPSEC_CONF_REPLACE" 2>/dev/null
+sed -i "s/\${VPN_DOMAIN}/$VPN_DOMAIN/g" "$PATH_IPSEC_CONF_REPLACE" 2>/dev/null
+sed -i "s/\${IPSEC_RDNS}/$IPSEC_RDNS/g" "$PATH_IPSEC_CONF_REPLACE" 2>/dev/null
 
-sed -i "s/\${XL2TPD_IPRANGE}/$XL2TPD_IPRANGE/g" /etc/xl2tpd/xl2tpd.conf
-sed -i "s/\${XL2TPD_IPLOCAL}/$XL2TPD_IPLOCAL/g" /etc/xl2tpd/xl2tpd.conf
-sed -i "s/\${XL2TPD_DNS1}/$XL2TPD_DNS1/g" /etc/ppp/options.xl2tpd
-sed -i "s/\${XL2TPD_DNS2}/$XL2TPD_DNS2/g" /etc/ppp/options.xl2tpd
+sed -i "s/\${XL2TPD_IPRANGE}/$XL2TPD_IPRANGE/g" "$PATH_XL2TPD_CONF" 2>/dev/null
+sed -i "s/\${XL2TPD_IPLOCAL}/$XL2TPD_IPLOCAL/g" "$PATH_XL2TPD_CONF" 2>/dev/null
+sed -i "s/\${XL2TPD_DNS1}/$XL2TPD_DNS1/g" "$PATH_PPP_CONF" 2>/dev/null
+sed -i "s/\${XL2TPD_DNS2}/$XL2TPD_DNS2/g" "$PATH_PPP_CONF" 2>/dev/null
 
 # create eap-user creds. to automatically add a new vpn user, use the script with the --adduser argument
 create_user() {
@@ -86,7 +84,7 @@ create_user() {
     local psk_user_pw=$(openssl rand -base64 24)
     local psk_user_key=$(openssl rand -base64 48)
 
-    cat >> "$PATH_IPSEC_SECRETS" <<EOF
+    cat >> "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
 $eap_user_name : EAP "$eap_user_pw"
 EOF
 
@@ -109,23 +107,13 @@ EOF
 
 # replace *.conf
 if [[ "$LE_CERT_STATUS" == "true" ]]; then
-    cat >> "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
-# /etc/ipsec.d/ipsec.docker/ipsec.docker.secrets - strongSwan IPsec secrets file
-
-%any %any : PSK "$psk_user_key"
-
-: RSA "fullchain.pem"
-
-$eap_user_name : EAP "$eap_user_pw"
-EOF
-
+    sed -i 's|: RSA "server-key.pem"|: RSA "le-crt.pem"|g' "$PATH_IPSEC_DOCKER_SECRETS" 2>/dev/null
 else
     :
 fi
 
-
 if [[ "$LE_CERT_STATUS" == "true" ]]; then
-    sed -i "s|leftcert=server-cert.pem|leftcert=fullchain.pem|g" /etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf 2>/dev/null
+    sed -i "s|leftcert=server-cert.pem|leftcert=le-crt.pem|g" "$PATH_IPSEC_CONF_REPLACE" 2>/dev/null
 else
     :
 fi
