@@ -2,7 +2,7 @@
 
 services:
   vpn-strongswan:
-    image: fisher/vpn-strongswan
+    image: fisher772/vpn-strongswan
     container_name: vpn-strongswan
     hostname: vpn-strongswan
     privileged: true
