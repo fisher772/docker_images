@@ -2,7 +2,11 @@
 
 services:
   vpn-strongswan:
+<<<<<<< HEAD
     image: fisher/vpn-strongswan
+=======
+    image: fisher772/vpn-strongswan
+>>>>>>> devops
     container_name: vpn-strongswan
     hostname: vpn-strongswan
     privileged: true
