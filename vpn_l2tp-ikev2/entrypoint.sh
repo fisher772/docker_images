@@ -107,7 +107,7 @@ EOF
 
 # replace *.conf
 if [[ "$LE_CERT_STATUS" == "true" ]]; then
-    sed -i 's|: RSA "server-key.pem"|: RSA "le-crt.pem"|g' "$PATH_IPSEC_DOCKER_SECRETS" 2>/dev/null
+    sed -i 's|: RSA "server-key.pem"|: ECDSA "le-key.pem"|g' "$PATH_IPSEC_DOCKER_SECRETS" 2>/dev/null
 else
     :
 fi
