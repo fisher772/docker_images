@@ -6,11 +6,11 @@ IMAGE_NAME:=fisher772/vpn-strongswan
 FULL_IMAGE_NAME=${IMAGE_NAME}:${VERSION}
 FULL_IMAGE_NAME_LATEST=${IMAGE_NAME}:latest
 
-VERSION:=1.0.0
+VERSION:=
 
 REMOTE_REGISTRY_NAME?=
-DOCKER_USER:=fisher772
-DOCKER_TOKEN:=dckr_pat_SFi0kFGliBW8YCaq6g0ALDr8rzM
+DOCKER_USER:=
+DOCKER_TOKEN:=
 
 build:
 	@echo "Building the image..."
