@@ -121,6 +121,49 @@ else
     :
 fi
 
+rewrite_creds() {
+    rm -f "$PATH_IPSEC/user_creds/*" 2>/dev/null
+
+    truncate -s 0 "$PATH_IPSEC_DOCKER_SECRETS" 2>/dev/null
+    truncate -s 0 "$PATH_CHAP_SECRETS" 2>/dev/null
+
+    cat >> "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
+# /etc/ipsec.d/ipsec.docker/ipsec.docker.secrets - strongSwan IPsec secrets file
+
+%any %any : PSK "$psk_user_key"
+
+: RSA "server-key.pem"
+
+$eap_user_name : EAP "$eap_user_pw"
+EOF
+    chmod 0600 "$PATH_IPSEC_DOCKER_SECRETS"
+
+    cat >> "$PATH_CHAP_SECRETS" <<EOF
+# Secrets for authentication using CHAP
+
+$psk_user_name    l2tpd-psk     "$psk_user_pw"         *
+EOF
+    chmod 0600 "$PATH_CHAP_SECRETS"
+
+    cat > "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt" <<EOF
+user: $psk_user_name
+password: $psk_user_pw
+EOF
+    chmod 0600 "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt"
+
+    cat > "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt" <<EOF
+user: $eap_user_name
+password: $eap_user_pw
+EOF
+    chmod 0600 "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt"
+
+if [[ "$LE_CERT_STATUS" == "true" ]]; then
+    sed -i 's|: RSA "server-key.pem"|: ECDSA "le-key.pem"|g' "$PATH_IPSEC_DOCKER_SECRETS" 2>/dev/null
+else
+    :
+fi
+}
+
 # function to use when this script recieves a SIGTERM.
 term() {
   echo "Caught SIGTERM signal! Stopping ipsec..."
@@ -146,6 +189,10 @@ revipt
 
 adduser() {
   create_user
+}
+
+clean_creds() {
+  rewrite_creds
 }
 
 if [ "$1" == "--adduser" ]; then
