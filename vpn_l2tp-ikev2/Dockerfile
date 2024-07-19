@@ -25,7 +25,7 @@ COPY settings/10-charon-logging.conf /etc/strongswan.d/10-charon-logging.conf
 RUN mkdir -p /etc/rsyslog.d
 RUN mkdir -p /etc/logrotate.d
 COPY settings/10-strongswan /etc/logrotate.d/10-strongswan
-COPY settings/10-auth /etc/logrotate.d/20-auth
+COPY settings/20-auth /etc/logrotate.d/20-auth
 
 COPY scripts/trasher.sh /trasher.sh
 RUN chmod 0755 /trasher.sh
