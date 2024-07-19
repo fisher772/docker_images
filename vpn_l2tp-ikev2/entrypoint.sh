@@ -16,6 +16,107 @@ PATH_KEYS=/etc/ipsec.d
 PATH_IPSEC=/etc/ipsec.d/ipsec.docker
 PATH_CHAP_SECRETS=/etc/ppp/chap-secrets
 
+# mount vars in conf files
+export $(grep -v '^#' /tmp/.env | xargs)
+
+create_user() {
+    echo "Cleaning credentials..."
+
+    local eap_user_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
+    local eap_user_pw=$(openssl rand -base64 24)
+    local psk_user_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
+    local psk_user_pw=$(openssl rand -base64 24)
+    local psk_user_key=$(openssl rand -base64 48)
+
+    cat >> "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
+$eap_user_name : EAP "$eap_user_pw"
+EOF
+
+    cat >> "$PATH_CHAP_SECRETS" <<EOF
+$psk_user_name    l2tpd-psk     "$psk_user_pw"         *
+EOF
+
+    cat > "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt" <<EOF
+user: $psk_user_name
+password: $psk_user_pw
+EOF
+    chmod 0600 "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt"
+
+    cat > "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt" <<EOF
+user: $eap_user_name
+password: $eap_user_pw
+EOF
+    chmod 0600 "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt"
+
+exit 0
+}
+
+rewrite_creds() {
+    echo "Rewriting credentials..."
+
+    local eap_user_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
+    local eap_user_pw=$(openssl rand -base64 24)
+    local psk_user_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
+    local psk_user_pw=$(openssl rand -base64 24)
+    local psk_user_key=$(openssl rand -base64 48)
+
+    rm -f "$PATH_IPSEC"/users_creds/* 2>/dev/null
+
+    truncate -s 0 "$PATH_IPSEC_DOCKER_SECRETS" 2>/dev/null
+    truncate -s 0 "$PATH_CHAP_SECRETS" 2>/dev/null
+
+    cat >> "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
+# /etc/ipsec.d/ipsec.docker/ipsec.docker.secrets - strongSwan IPsec secrets file
+
+%any %any : PSK "$psk_user_key"
+
+: RSA "server-key.pem"
+
+$eap_user_name : EAP "$eap_user_pw"
+EOF
+    chmod 0600 "$PATH_IPSEC_DOCKER_SECRETS"
+
+    cat >> "$PATH_CHAP_SECRETS" <<EOF
+# Secrets for authentication using CHAP
+
+$psk_user_name    l2tpd-psk     "$psk_user_pw"         *
+EOF
+    chmod 0600 "$PATH_CHAP_SECRETS"
+
+    cat > "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt" <<EOF
+user: $psk_user_name
+password: $psk_user_pw
+EOF
+    chmod 0600 "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt"
+
+    cat > "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt" <<EOF
+user: $eap_user_name
+password: $eap_user_pw
+EOF
+    chmod 0600 "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt"
+
+if [[ "$LE_CERT_STATUS" == "true" ]]; then
+    sed -i 's|: RSA "server-key.pem"|: ECDSA "le-key.pem"|g' "$PATH_IPSEC_DOCKER_SECRETS" 2>/dev/null
+else
+    :
+fi
+
+exit 0
+}
+
+case "$1" in
+  --clean_creds)
+    rewrite_creds
+    ;;
+  --adduser)
+    create_user
+    ;;
+  *)
+    echo "Unknown argument"
+    exit 1
+    ;;
+esac
+
 # add iptables rules if IPTABLES=true
 if [[ x${IPTABLES} == 'xtrue' ]]; then
   iptables -A INPUT ${ENDPOINTS} ${INTERFACE} -p udp -m udp --sport 500 --dport 500 -m policy --pol ipsec --dir out -j ACCEPT
@@ -67,9 +168,6 @@ sysctl -w net.ipv4.conf.default.rp_filter=0
 sysctl -w net.ipv4.conf.eth0.send_redirects=0
 sysctl -w net.ipv4.conf.eth0.rp_filter=0
 
-# mount vars in conf files
-export $(grep -v '^#' /tmp/.env | xargs)
-
 sed -i "s/\${VPN_ROUTE_RANGE}/$VPN_ROUTE_RANGE/g" "$PATH_IPSEC_CONF_REPLACE" 2>/dev/null
 sed -i "s/\${VPN_DOMAIN}/$VPN_DOMAIN/g" "$PATH_IPSEC_CONF_REPLACE" 2>/dev/null
 sed -i "s/\${IPSEC_RDNS}/$IPSEC_RDNS/g" "$PATH_IPSEC_CONF_REPLACE" 2>/dev/null
@@ -78,35 +176,6 @@ sed -i "s/\${XL2TPD_IPRANGE}/$XL2TPD_IPRANGE/g" "$PATH_XL2TPD_CONF" 2>/dev/null
 sed -i "s/\${XL2TPD_IPLOCAL}/$XL2TPD_IPLOCAL/g" "$PATH_XL2TPD_CONF" 2>/dev/null
 sed -i "s/\${XL2TPD_DNS1}/$XL2TPD_DNS1/g" "$PATH_PPP_CONF" 2>/dev/null
 sed -i "s/\${XL2TPD_DNS2}/$XL2TPD_DNS2/g" "$PATH_PPP_CONF" 2>/dev/null
-
-# create eap-user creds. to automatically add a new vpn user, use the script with the --adduser argument
-create_user() {
-    local eap_user_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
-    local eap_user_pw=$(openssl rand -base64 24)
-    local psk_user_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
-    local psk_user_pw=$(openssl rand -base64 24)
-    local psk_user_key=$(openssl rand -base64 48)
-
-    cat >> "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
-$eap_user_name : EAP "$eap_user_pw"
-EOF
-
-    cat >> "$PATH_CHAP_SECRETS" <<EOF
-$psk_user_name    l2tpd-psk     "$psk_user_pw"         *
-EOF
-
-    cat > "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt" <<EOF
-user: $psk_user_name
-password: $psk_user_pw
-EOF
-    chmod 0600 "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt"
-
-    cat > "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt" <<EOF
-user: $eap_user_name
-password: $eap_user_pw
-EOF
-    chmod 0600 "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt"
-}
 
 # replace *.conf
 if [[ "$LE_CERT_STATUS" == "true" ]]; then
@@ -120,49 +189,6 @@ if [[ "$LE_CERT_STATUS" == "true" ]]; then
 else
     :
 fi
-
-rewrite_creds() {
-    rm -f "$PATH_IPSEC/user_creds/*" 2>/dev/null
-
-    truncate -s 0 "$PATH_IPSEC_DOCKER_SECRETS" 2>/dev/null
-    truncate -s 0 "$PATH_CHAP_SECRETS" 2>/dev/null
-
-    cat >> "$PATH_IPSEC_DOCKER_SECRETS" <<EOF
-# /etc/ipsec.d/ipsec.docker/ipsec.docker.secrets - strongSwan IPsec secrets file
-
-%any %any : PSK "$psk_user_key"
-
-: RSA "server-key.pem"
-
-$eap_user_name : EAP "$eap_user_pw"
-EOF
-    chmod 0600 "$PATH_IPSEC_DOCKER_SECRETS"
-
-    cat >> "$PATH_CHAP_SECRETS" <<EOF
-# Secrets for authentication using CHAP
-
-$psk_user_name    l2tpd-psk     "$psk_user_pw"         *
-EOF
-    chmod 0600 "$PATH_CHAP_SECRETS"
-
-    cat > "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt" <<EOF
-user: $psk_user_name
-password: $psk_user_pw
-EOF
-    chmod 0600 "$PATH_IPSEC/users_creds/psk_${psk_user_name}.txt"
-
-    cat > "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt" <<EOF
-user: $eap_user_name
-password: $eap_user_pw
-EOF
-    chmod 0600 "$PATH_IPSEC/users_creds/ikev_${eap_user_name}.txt"
-
-if [[ "$LE_CERT_STATUS" == "true" ]]; then
-    sed -i 's|: RSA "server-key.pem"|: ECDSA "le-key.pem"|g' "$PATH_IPSEC_DOCKER_SECRETS" 2>/dev/null
-else
-    :
-fi
-}
 
 # function to use when this script recieves a SIGTERM.
 term() {
@@ -186,16 +212,3 @@ wait $!
 
 # remove iptable rules
 revipt
-
-adduser() {
-  create_user
-}
-
-clean_creds() {
-  rewrite_creds
-}
-
-if [ "$1" == "--adduser" ]; then
-  adduser
-  exit 0
-fi

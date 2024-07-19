@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 RUN set -xe \
-    && apk add --no-cache --update sudo bash tzdata rsyslog \
+    && apk add --no-cache --update sudo bash tzdata rsyslog logrotate\
     iptables iptables-legacy openssl strongswan xl2tpd
 
 ARG ENV_FILE=.env
@@ -14,10 +14,6 @@ COPY scripts/init.sh /init.sh
 RUN chmod 0755 /init.sh
 RUN bash /init.sh
 
-COPY scripts/trasher.sh /trasher.sh
-RUN chmod 0755 /trasher.sh
-RUN echo '0 0 * * * /trasher.sh' | crontab -
-
 COPY settings/l2tp-ikev2.conf /etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf
 
 COPY settings/xl2tpd.conf /etc/xl2tpd/xl2tpd.conf
@@ -27,7 +23,14 @@ COPY settings/options.xl2tpd /etc/ppp/options.xl2tpd
 COPY settings/10-charon-logging.conf /etc/strongswan.d/10-charon-logging.conf
 
 RUN mkdir -p /etc/rsyslog.d
-COPY settings/10-strongswan.conf /etc/rsyslog.d/10-strongswan.conf
+RUN mkdir -p /etc/logrotate.d
+COPY settings/10-strongswan /etc/logrotate.d/10-strongswan
+COPY settings/10-auth /etc/logrotate.d/10-auth
+
+COPY scripts/trasher.sh /trasher.sh
+RUN chmod 0755 /trasher.sh
+RUN echo '0 0 * * * /trasher.sh' | crontab -
+RUN echo "0 0 * * * /usr/sbin/logrotate /etc/logrotate.conf" | crontab -
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 0755 /entrypoint.sh

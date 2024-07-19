@@ -8,13 +8,17 @@ RUN \
  rm /etc/nginx/conf.d/default.conf && \
  chmod +x /entrypoint.sh && \
  chmod +x /le.sh && \
- apk add --no-cache --update bash certbot tzdata openssl rsyslog
+ apk add --no-cache --update bash certbot tzdata openssl rsyslog logrotate
 
 ARG ENV_FILE=.env
 ARG ENV_FILE=creds.env
 
 RUN mkdir -p /etc/rsyslog.d
-COPY settings/20-nginx.conf /etc/rsyslog.d/20-nginx.conf
+RUN mkdir -p /etc/logrotate.d
+COPY settings/10-nginx /etc/logrotate.d/10-nginx
+COPY settings/20-auth /etc/logrotate.d/20-auth
+
+RUN echo "0 0 * * * /usr/sbin/logrotate /etc/logrotate.conf" | crontab -
 
 COPY settings/nginx.conf /etc/nginx/nginx.conf
 
