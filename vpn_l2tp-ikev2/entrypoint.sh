@@ -112,9 +112,7 @@ case "$1" in
     create_user
     ;;
   *)
-    echo "Unknown argument"
-    exit 1
-    ;;
+    :
 esac
 
 # add iptables rules if IPTABLES=true
