@@ -1,0 +1,12 @@
+/var/log/vpn/*.log {
+    daily
+    rotate 7
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create 644 ipsec ipsec
+    postrotate
+        /usr/lib/rsyslog/rsyslog-rotate
+    endscript
+}
