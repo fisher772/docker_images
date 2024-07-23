@@ -202,6 +202,7 @@ trap term SIGTERM
 echo "Starting strongSwan/ipsec..."
 ipsec start --nofork "$@" &
 
+/usr/sbin/crond
 /usr/sbin/rsyslogd
 /usr/sbin/xl2tpd
 

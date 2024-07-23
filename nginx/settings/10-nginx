@@ -4,9 +4,9 @@
     missingok
     notifempty
     compress
+    copytruncate
     delaycompress
-    create 644 ipsec ipsec
-    postrotate
-        /usr/lib/rsyslog/rsyslog-rotate
-    endscript
+    dateext
+    create 644 root root
+    dateformat -%Y-%m-%d-%s
 }

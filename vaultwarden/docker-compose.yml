@@ -2,14 +2,17 @@
 
 services:
   vaultwarden:
-    image: vaultwarden/server
+    image: fisher772/vaultwarden
     container_name: vaultwarden
     hostname: vaultwarden
     restart: unless-stopped
     volumes:
       - data:/data/
+      - ${N_CONF}:/data/nginx_conf
+      - ${N_STREAM}:/data/nginx_stream
     environment:
       - TZ=${EKB}
+      - LOG_FILE=${LOGS}
     networks:
       - nginx
 
