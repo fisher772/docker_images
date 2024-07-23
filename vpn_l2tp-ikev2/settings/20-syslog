@@ -1,4 +1,4 @@
-/var/log/vpn/*.log {
+/var/log/*.log {
     daily
     rotate 7
     missingok
@@ -7,6 +7,6 @@
     copytruncate
     delaycompress
     dateext
-    create 644 ipsec ipsec
+    create 644 root root
     dateformat -%Y-%m-%d-%s
 }
