@@ -8,8 +8,8 @@ services:
     restart: unless-stopped
     volumes:
       - data:/data/
-      - ${N_CONF}:/data/nginx_conf
-      - ${N_STREAM}:/data/nginx_stream
+      - logs:/var/log/vaultwarden
+      - nginx:/data/nginx
     environment:
       - TZ=${EKB}
       - LOG_FILE=${LOGS}
@@ -22,3 +22,5 @@ networks:
 
 volumes:
   data:
+  logs:
+  nginx:
