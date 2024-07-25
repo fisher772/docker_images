@@ -7,19 +7,6 @@ echo "start nginx"
 #     echo ${TZ} >/etc/timezone
 # fi
 
-if grep -q "fisher script" /etc/rsyslog.conf; then
-    :
-else
-    cat >> /etc/rsyslog.conf <<EOF
-# fisher script
-
-\$ActionFileRotateInterval day
-\$ActionFileCreateDiskspace 10M
-\$ActionFileNumberOfBackups 30
-\$ActionFileRemoveOldest "yes"
-EOF
-fi
-
 #setup ssl keys, export to pass them to le.sh
 echo "ssl_key=${SSL_KEY:=le-key.pem}, ssl_cert=${SSL_CERT:=le-crt.pem}, ssl_chain_cert=${SSL_CHAIN_CERT:=le-chain-crt.pem}"
 export LE_SSL_KEY=/etc/nginx/ssl/${SSL_KEY}
