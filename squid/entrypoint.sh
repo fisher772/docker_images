@@ -7,9 +7,15 @@ rewrite_creds() {
     local user=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
     local user_pw=$(openssl rand -base64 24)
 
-    rm -f /etc/squid3/squid_creds 2>/dev/null
+    rm -f /etc/squid/squid_creds 2>/dev/null
 
-    echo "$user:$user_pw" | htpasswd -nbB > /etc/squid3/squid_creds
+    htpasswd -cbB /etc/squid/squid_creds | echo "$user:$user_pw"
+
+cat > "/etc/squid/user_creds/${user}.txt" <<EOF
+      user: $user
+      password: $user_pw
+EOF
+    chmod 0600 "/etc/squid/user_creds/${user}.txt"
 
 exit 0
 }
@@ -20,7 +26,13 @@ create_user() {
     local user=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
     local user_pw=$(openssl rand -base64 24)
 
-    echo "$user:$user_pw" | htpasswd -b /etc/squid3/squid_creds new_user "$user_pw"
+    htpasswd -bB /etc/squid/squid_creds | echo "$user:$user_pw"
+
+cat > "/etc/squid/user_creds/${user}.txt" <<EOF
+      user: $user
+      password: $user_pw
+EOF
+    chmod 0600 "/etc/squid/user_creds/${user}.txt"
 
 exit 0
 }
@@ -36,6 +48,28 @@ case "$1" in
     :
 esac
 
+create_creds_dir() {
+  mkdir -p /etc/squid/user_creds
+  chmod 0600 /etc/squid/user_creds
+}
+
+create_creds() {
+    local user=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
+    local user_pw=$(openssl rand -base64 24)
+
+    rm -f /etc/squid/squid_creds 2>/dev/null
+
+    htpasswd -cbB /etc/squid/squid_creds | echo "$user:$user_pw"
+
+cat > "/etc/squid/user_creds/${user}.txt" <<EOF
+      user: $user
+      password: $user_pw
+EOF
+    chmod 0600 "/etc/squid/user_creds/${user}.txt"
+
+exit 0 
+}
+
 create_log_dir() {
   mkdir -p ${SQUID_LOG_DIR}
   chmod -R 755 ${SQUID_LOG_DIR}
@@ -46,6 +80,12 @@ create_cache_dir() {
   mkdir -p ${SQUID_CACHE_DIR}
   chown -R ${SQUID_USER}:${SQUID_USER} ${SQUID_CACHE_DIR}
 }
+
+if [[ ! -f /etc/squid/squid_creds ]]; then
+  create_creds
+else
+  :
+fi
 
 create_log_dir
 create_cache_dir
