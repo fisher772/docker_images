@@ -1,0 +1,28 @@
+---
+
+services:
+  squid:
+    image: fisher772/squid
+    container_name: squid
+    hostname: squid
+    restart: always
+    ports:
+      - '3128:3128'
+    volumes:
+      - cache:/var/spool/squid
+      - data:/etc/squid
+    environment:
+      - TZ=${EKB}
+
+    networks:
+      - nginx
+      - squid
+
+networks:
+  squid:
+  nginx:
+    external: true
+
+volumes:
+  cache:
+  data:
