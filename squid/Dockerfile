@@ -2,19 +2,17 @@ FROM alpine:latest
 
 RUN set -xe \
     && apk add --no-cache --update sudo bash tzdata rsyslog logrotate\
-    iptables iptables-legacy openssl openresty squid
+    iptables iptables-legacy openssl apache2-utils squid
 
 ENV SQUID_CACHE_DIR=/var/spool/squid \
     SQUID_LOG_DIR=/var/log/squid \
     SQUID_USER=proxy
 
-RUN touch /etc/squid3/squid.conf && \
-    chmod 644 /etc/squid3/squid.conf
+RUN touch /etc/squid/squid.conf && \
+    chmod 644 /etc/squid/squid.conf
 
 RUN user=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1) && \
     user_pw=$(openssl rand -base64 24)
-
-RUN echo "$user:$user_pw" | htpasswd -nbB > /etc/squid3/squid_creds
 
 RUN echo "0 0 * * * /usr/sbin/logrotate /etc/logrotate.conf" | crontab -
 
