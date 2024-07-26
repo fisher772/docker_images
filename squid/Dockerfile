@@ -11,9 +11,6 @@ ENV SQUID_CACHE_DIR=/var/spool/squid \
 RUN touch /etc/squid/squid.conf && \
     chmod 644 /etc/squid/squid.conf
 
-RUN user=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1) && \
-    user_pw=$(openssl rand -base64 24)
-
 RUN echo "0 0 * * * /usr/sbin/logrotate /etc/logrotate.conf" | crontab -
 
 RUN mkdir -p /etc/rsyslog.d
