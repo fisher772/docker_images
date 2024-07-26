@@ -57,8 +57,6 @@ create_creds() {
     local user=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
     local user_pw=$(openssl rand -base64 24)
 
-    rm -f /etc/squid/squid_creds 2>/dev/null
-
     htpasswd -cbB /etc/squid/squid_creds | echo "$user:$user_pw"
 
 cat > "/etc/squid/user_creds/${user}.txt" <<EOF
@@ -80,6 +78,8 @@ create_cache_dir() {
   mkdir -p ${SQUID_CACHE_DIR}
   chown -R ${SQUID_USER}:${SQUID_USER} ${SQUID_CACHE_DIR}
 }
+
+create_creds_dir
 
 if [[ ! -f /etc/squid/squid_creds ]]; then
   create_creds
