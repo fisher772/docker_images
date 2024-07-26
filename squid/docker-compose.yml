@@ -10,6 +10,7 @@ services:
       - '3128:3128'
     volumes:
       - cache:/var/spool/squid
+      - logs:/var/log
       - data:/etc/squid
     environment:
       - TZ=${EKB}
@@ -24,4 +25,5 @@ networks:
 
 volumes:
   cache:
+  logs:
   data:
