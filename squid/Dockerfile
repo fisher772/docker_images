@@ -1,8 +1,9 @@
-FROM alpine:latest
+FROM ubuntu:jammy
 
-RUN set -xe \
-    && apk add --no-cache --update sudo bash tzdata rsyslog logrotate\
-    iptables iptables-legacy openssl apache2-utils squid
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y openssl apache2-utils \
+    tzdata iptables squid && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ENV SQUID_CACHE_DIR=/var/spool/squid \
     SQUID_LOG_DIR=/var/log/squid \
@@ -25,5 +26,3 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
 
 EXPOSE 3128/tcp
-
-ENTRYPOINT [ "/entrypoint.sh" ]
