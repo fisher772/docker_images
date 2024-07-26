@@ -26,3 +26,5 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
 
 EXPOSE 3128/tcp
+
+ENTRYPOINT ["/entrypoint.sh"]
