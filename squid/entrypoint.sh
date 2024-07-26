@@ -9,7 +9,7 @@ rewrite_creds() {
 
     rm -f /etc/squid/squid_creds 2>/dev/null
 
-    htpasswd -cbB /etc/squid/squid_creds | echo "$user:$user_pw"
+    htpasswd -cbB /etc/squid/squid_creds $user $user_pw
 
 cat > "/etc/squid/user_creds/${user}.txt" <<EOF
       user: $user
@@ -26,7 +26,7 @@ create_user() {
     local user=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
     local user_pw=$(openssl rand -base64 24)
 
-    htpasswd -bB /etc/squid/squid_creds | echo "$user:$user_pw"
+    htpasswd -bB /etc/squid/squid_creds $user $user_pw
 
 cat > "/etc/squid/user_creds/${user}.txt" <<EOF
       user: $user
@@ -57,7 +57,7 @@ create_creds() {
     local user=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
     local user_pw=$(openssl rand -base64 24)
 
-    htpasswd -cbB /etc/squid/squid_creds | echo "$user:$user_pw"
+    htpasswd -cbB /etc/squid/squid_creds $user $user_pw
 
 cat > "/etc/squid/user_creds/${user}.txt" <<EOF
       user: $user
@@ -65,18 +65,15 @@ cat > "/etc/squid/user_creds/${user}.txt" <<EOF
 EOF
     chmod 0600 "/etc/squid/user_creds/${user}.txt"
 
-exit 0 
+exit 0
 }
 
 create_log_dir() {
   mkdir -p ${SQUID_LOG_DIR}
-  chmod -R 755 ${SQUID_LOG_DIR}
-  chown -R ${SQUID_USER}:${SQUID_USER} ${SQUID_LOG_DIR}
 }
 
 create_cache_dir() {
   mkdir -p ${SQUID_CACHE_DIR}
-  chown -R ${SQUID_USER}:${SQUID_USER} ${SQUID_CACHE_DIR}
 }
 
 create_creds_dir
@@ -91,7 +88,6 @@ create_log_dir
 create_cache_dir
 
 exec $(which crond)
-exec $(which rsyslogd)
 
 # allow arguments to be passed to squid
 if [[ ${1:0:1} = '-' ]]; then
