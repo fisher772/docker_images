@@ -18,10 +18,8 @@ services:
       - TZ=${EKB}
       - LETSENCRYPT=${STATUS}
       - LE_EMAIL=${EMAIL}
-      - LE_FQDN=${FQDN}
       - LE_CERT_CHAIN=${CERT_CHAIN}
       - LE_CERT_FQDN=${CERT_FQDN}
-      - SERVER_ALIAS=${ALIAS}
       - VPN_ADDRESSES=${SEC_IP}
       - VPN_SEC=${SEC_STATUS}
       #- SNAT_IP=${SNAT}
