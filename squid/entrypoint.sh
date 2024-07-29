@@ -4,10 +4,11 @@ set -e
 rewrite_creds() {
     echo "Rewriting credentials..."
 
-    local user=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
+    local user=$(cat /dev/urandom | tr -dc 'a-z 0-9' | fold -w 8 | head -n 1)
     local user_pw=$(openssl rand -base64 24)
 
     rm -f /etc/squid/squid_creds 2>/dev/null
+    rm -f /etc/squid/user_creds/* 2>/dev/null
 
     htpasswd -cbB /etc/squid/squid_creds $user $user_pw
 
@@ -38,7 +39,7 @@ exit 0
 }
 
 case "$1" in
-  --clean_creds)
+  --rewrite_creds)
     rewrite_creds
     ;;
   --adduser)
@@ -68,6 +69,16 @@ EOF
 exit 0
 }
 
+create_trusted_users () {
+  if [[ -f /etc/squid/KnowUsers.acl && -n "${TRUSTED_IP}" ]]; then
+    sed -i "s|#TRUSTED_IP|${TRUSTED_IP}|g" /etc/squid/KnowUsers.acl 2>/dev/null
+    sed -i "s|#http_access allow KnownUsers|http_access allow KnownUsers|g" /etc/squid/squid.conf 2>/dev/null
+  else
+    :
+  fi
+}
+
+
 create_log_dir() {
   mkdir -p ${SQUID_LOG_DIR}
 }
@@ -77,6 +88,7 @@ create_cache_dir() {
 }
 
 create_creds_dir
+create_trusted_users
 
 if [[ ! -f /etc/squid/squid_creds ]]; then
   create_creds
