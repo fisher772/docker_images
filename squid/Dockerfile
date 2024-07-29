@@ -11,8 +11,12 @@ ENV SQUID_CACHE_DIR=/var/spool/squid \
 
 RUN echo "0 0 * * * /usr/sbin/logrotate /etc/logrotate.conf" | crontab -
 
+RUN mkdir -p /data/nginx/stream
 RUN mkdir -p /etc/rsyslog.d
 RUN mkdir -p /etc/logrotate.d
+
+COPY settings/service-squid.conf /data/nginx/service-squid.conf
+COPY settings/stream/service-squid-stream.conf /data/nginx/stream/service-squid-stream.conf
 
 COPY settings/10-squid /etc/logrotate.d/10-squid
 COPY settings/20-syslog /etc/logrotate.d/20-syslog

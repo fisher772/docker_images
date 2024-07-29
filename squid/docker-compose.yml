@@ -12,8 +12,11 @@ services:
       - cache:/var/spool/squid
       - logs:/var/log
       - data:/etc/squid
+      - nginx:/data/nginx
     environment:
       - TZ=${EKB}
+      - LE_FQDN=${FQDN}
+      - SERVER_ALIAS=${ALIAS}
       #- TRUSTED_IP=${T_IP}
     networks:
       - nginx
@@ -28,3 +31,4 @@ volumes:
   cache:
   logs:
   data:
+  nginx:

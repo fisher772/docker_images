@@ -47,8 +47,6 @@ sed -i "s|SSL_CHAIN_CERT|${LE_SSL_CHAIN_CERT}|g" /etc/nginx/stream.d/*.conf 2>/d
 
 #replace LE_FQDN/LE_CERT_FQDN
 sed -i "s|LE_CERT_FQDN|${LE_CERT_FQDN}|g" /etc/nginx/nginx.conf 2>/dev/null
-sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/conf.d/*.conf 2>/dev/null
-sed -i "s|LE_FQDN|${LE_FQDN}|g" /etc/nginx/stream.d/*.conf 2>/dev/null
 
 #replace SEC
 if [[ "$VPN_SEC" == "true" ]]; then
@@ -57,9 +55,6 @@ if [[ "$VPN_SEC" == "true" ]]; then
 else
     :
 fi
-
-#replace SERVER_ALIAS
-sed -i "s|SERVER_ALIAS|${SERVER_ALIAS}|g" /etc/nginx/stream.d/*.conf 2>/dev/null
 
 #generate dhparams.pem
 if [ ! -f /etc/nginx/ssl/dhparams.pem ]; then
@@ -90,7 +85,7 @@ mv -v /etc/nginx/stream.d /etc/nginx/stream.d.disabled
  done
 ) &
 
-/usr/sbin/crond
-/usr/sbin/rsyslogd
+exec $(which crond)
+exec $(which rsyslogd)
 
 exec nginx -g "daemon off;"
