@@ -11,7 +11,6 @@ RUN \
  apk add --no-cache --update bash certbot tzdata openssl rsyslog logrotate
 
 ARG ENV_FILE=.env
-ARG ENV_FILE=creds.env
 
 RUN mkdir -p /etc/rsyslog.d
 RUN mkdir -p /etc/logrotate.d
