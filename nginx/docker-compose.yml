@@ -18,8 +18,7 @@ services:
       - TZ=${EKB}
       - LETSENCRYPT=${STATUS}
       - LE_EMAIL=${EMAIL}
-      - LE_CERT_CHAIN=${CERT_CHAIN}
-      - LE_CERT_FQDN=${CERT_FQDN}
+      - LE_FQDN=${FQDN}
       - VPN_ADDRESSES=${SEC_IP}
       - VPN_SEC=${SEC_STATUS}
       #- SSL_CERT=le-crt.pem
