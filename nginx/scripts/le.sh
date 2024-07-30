@@ -43,7 +43,7 @@ if [ "$first_char" = "$last_char" ] && [ "$first_char" = "'" -o "$first_char" = 
 fi
 
 # Use the trimmed string when calling the command
-eval "certbot certonly -t -n --agree-tos --renew-by-default --email \"${LE_EMAIL}\" --webroot -w /usr/share/nginx/html -d ${LE_CERT_CHAIN} ${LE_ADDITIONAL_OPTIONS_TRIMMED}"
+eval "certbot certonly -t -n --agree-tos --renew-by-default --email ${LE_EMAIL} --webroot -w /usr/share/nginx/html -d ${LE_CERT_CHAIN} ${LE_ADDITIONAL_OPTIONS_TRIMMED}"
 le_result=$?
 if [ ${le_result} -ne 0 ]; then
     echo "failed to run certbot"
