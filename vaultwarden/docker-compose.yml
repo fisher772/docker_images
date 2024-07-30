@@ -14,7 +14,8 @@ services:
       - TZ=${EKB}
       - LOG_FILE=${LOGS}
       - LE_FQDN=${FQDN}
-      - SERVER_ALIAS=${ALIAS}
+      - COUNTAINER_ALIAS=${C_ALIAS}
+      - SERVER_ALIAS=${S_ALIAS}
     networks:
       - nginx
 

@@ -1,7 +1,8 @@
 FROM nginx:stable-alpine-slim
 
-COPY entrypoint.sh /entrypoint.sh
+COPY settings/nginx.conf /etc/nginx/nginx.conf
 
+COPY entrypoint.sh /entrypoint.sh
 COPY scripts/le.sh /le.sh
 
 RUN \
@@ -9,8 +10,6 @@ RUN \
  chmod +x /entrypoint.sh && \
  chmod +x /le.sh && \
  apk add --no-cache --update bash certbot tzdata openssl rsyslog logrotate
-
-ARG ENV_FILE=.env
 
 RUN mkdir -p /etc/rsyslog.d
 RUN mkdir -p /etc/logrotate.d
@@ -21,7 +20,5 @@ COPY settings/30-le /etc/logrotate.d/30-le
 RUN rm -f /etc/logrotate.d/rsyslog
 
 RUN echo "0 0 * * * /usr/sbin/logrotate /etc/logrotate.conf" | crontab -
-
-COPY settings/nginx.conf /etc/nginx/nginx.conf
 
 ENTRYPOINT ["/entrypoint.sh"]
