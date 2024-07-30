@@ -13,7 +13,7 @@ services:
       - ssl:/etc/nginx/ssl
       - conf:/etc/nginx
       - logs:/var/log/nginx
-      - logs:/var/log/letsencrypt
+      - le:/var/log/letsencrypt
     environment:
       - TZ=${EKB}
       - LETSENCRYPT=${STATUS}
@@ -38,3 +38,4 @@ volumes:
   ssl:
   conf:
   logs:
+  le:
