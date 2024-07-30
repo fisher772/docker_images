@@ -22,7 +22,6 @@ services:
       - LE_CERT_FQDN=${CERT_FQDN}
       - VPN_ADDRESSES=${SEC_IP}
       - VPN_SEC=${SEC_STATUS}
-      #- SNAT_IP=${SNAT}
       #- SSL_CERT=le-crt.pem
       #- SSL_KEY=le-key.pem
       #- SSL_CHAIN_CERT=le-chain-crt.pem

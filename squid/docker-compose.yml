@@ -16,7 +16,8 @@ services:
     environment:
       - TZ=${EKB}
       - LE_FQDN=${FQDN}
-      - SERVER_ALIAS=${ALIAS}
+      - COUNTAINER_ALIAS=${C_ALIAS}
+      - SERVER_ALIAS=${S_ALIAS}
       #- TRUSTED_IP=${T_IP}
     networks:
       - nginx

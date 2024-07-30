@@ -28,14 +28,14 @@ STREAMS_FILES=$(find "/etc/nginx/" -type f -maxdepth 1 -name "stream*.conf")
 
 #copy service*.conf and stream*.conf from /etc/nginx/ if they are mounted
 if [ ${#SERVICES_FILES} -ne 0 ]; then
-    cp -fv /etc/nginx/service*.conf /etc/nginx/conf.d/
+    cp -fv /etc/nginx/service*.conf /etc/nginx/conf.d/ 2>/dev/null
 fi
 if [ ${#STREAMS_FILES} -ne 0 ]; then
-    cp -fv /etc/nginx/stream*.conf /etc/nginx/stream.d/
+    cp -fv /etc/nginx/stream*.conf /etc/nginx/stream.d/ 2>/dev/null
 fi
 
-cp -fv /etc/nginx/conf.d-le/*.conf /etc/nginx/conf.d/
-cp -fv /etc/nginx/stream.d-le/*.conf /etc/nginx/stream.d/
+cp -fv /etc/nginx/conf.d-le/*.conf /etc/nginx/conf.d/ 2>/dev/null
+cp -fv /etc/nginx/stream.d-le/*.conf /etc/nginx/stream.d/ 2>/dev/null
 
 #replace SSL_KEY, SSL_CERT and SSL_CHAIN_CERT by actual keys
 sed -i "s|SSL_KEY|${LE_SSL_KEY}|g" /etc/nginx/conf.d/*.conf 2>/dev/null
@@ -45,8 +45,9 @@ sed -i "s|SSL_CERT|${LE_SSL_CERT}|g" /etc/nginx/stream.d/*.conf 2>/dev/null
 sed -i "s|SSL_CHAIN_CERT|${LE_SSL_CHAIN_CERT}|g" /etc/nginx/conf.d/*.conf 2>/dev/null
 sed -i "s|SSL_CHAIN_CERT|${LE_SSL_CHAIN_CERT}|g" /etc/nginx/stream.d/*.conf 2>/dev/null
 
-#replace LE_FQDN/LE_CERT_FQDN
-sed -i "s|LE_CERT_FQDN|${LE_CERT_FQDN}|g" /etc/nginx/nginx.conf 2>/dev/null
+#replace LE_FQDN
+TR_FQDN=$(echo "$LE_FQDN" | tr ',' ' ')
+sed -i "s|LE_FQDN|${TR_FQDN}|g" /etc/nginx/nginx.conf 2>/dev/null
 
 #replace SEC
 if [[ "$VPN_SEC" == "true" ]]; then
@@ -65,8 +66,8 @@ if [ ! -f /etc/nginx/ssl/dhparams.pem ]; then
 fi
 
 #disable configuration and let it run without SSL
-mv -v /etc/nginx/conf.d /etc/nginx/conf.d.disabled
-mv -v /etc/nginx/stream.d /etc/nginx/stream.d.disabled
+mv -v /etc/nginx/conf.d /etc/nginx/conf.d.disabled 2>/dev/null
+mv -v /etc/nginx/stream.d /etc/nginx/stream.d.disabled 2>/dev/null
 
 (
  sleep 5 #give nginx time to start
@@ -85,7 +86,7 @@ mv -v /etc/nginx/stream.d /etc/nginx/stream.d.disabled
  done
 ) &
 
-exec $(which crond)
-exec $(which rsyslogd)
+/usr/sbin/crond
+/usr/sbin/rsyslogd
 
 exec nginx -g "daemon off;"
