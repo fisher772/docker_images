@@ -30,7 +30,7 @@ exit 0
 create_user() {
     echo "Rewriting credentials..."
 
-    local user=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
+    local user=$(cat /dev/urandom | tr -dc 'a-z 0-9' | fold -w 8 | head -n 1)
     local user_pw=$(openssl rand -base64 24)
 
     htpasswd -bB /etc/squid/squid_creds $user $user_pw
@@ -61,7 +61,7 @@ create_creds_dir() {
 }
 
 create_creds() {
-    local user=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
+    local user=$(cat /dev/urandom | tr -dc 'a-z 0-9' | fold -w 8 | head -n 1)
     local user_pw=$(openssl rand -base64 24)
 
     htpasswd -cbB /etc/squid/squid_creds $user $user_pw
