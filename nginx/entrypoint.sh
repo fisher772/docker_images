@@ -1,10 +1,10 @@
 #!/bin/bash
 echo "start nginx"
 
- if [[ ! -z "${TZ}" ]]; then
-     cp /usr/share/zoneinfo/${TZ} /etc/localtime
-     echo ${TZ} >/etc/timezone
- fi
+if [[ ! -z "${TZ}" ]]; then
+  cp /usr/share/zoneinfo/${TZ} /etc/localtime
+  echo ${TZ} >/etc/timezone
+fi
 
 #setup ssl keys, export to pass them to le.sh
 echo "ssl_key=${SSL_KEY:=le-key.pem}, ssl_cert=${SSL_CERT:=le-crt.pem}, ssl_chain_cert=${SSL_CHAIN_CERT:=le-chain-crt.pem}"

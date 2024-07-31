@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
- if [[ ! -z "${TZ}" ]]; then
-     cp /usr/share/zoneinfo/${TZ} /etc/localtime
-     echo ${TZ} >/etc/timezone
- fi
+if [[ ! -z "${TZ}" ]]; then
+  cp /usr/share/zoneinfo/${TZ} /etc/localtime
+  echo ${TZ} >/etc/timezone
+fi
 
 rewrite_creds() {
     echo "Rewriting credentials..."
