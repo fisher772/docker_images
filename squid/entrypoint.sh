@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+set TZ
+ if [[ ! -z "${TZ}" ]]; then
+     cp /usr/share/zoneinfo/${TZ} /etc/localtime
+     echo ${TZ} >/etc/timezone
+ fi
+
 rewrite_creds() {
     echo "Rewriting credentials..."
 
@@ -71,7 +77,7 @@ exit 0
 
 create_trusted_users () {
   if [[ -f /etc/squid/KnowUsers.acl && -n "${TRUSTED_IP}" ]]; then
-    TR_IP=$(echo "$LE_FQDN" | tr ',' '\n')
+    TR_IP=$(echo "$TRUSTED_IP" | tr ',' '\n')
     sed -i "s|#TRUSTED_IP|${TR_IP}|g" /etc/squid/KnowUsers.acl 2>/dev/null
     sed -i "s|#http_access allow KnownUsers|http_access allow KnownUsers|g" /etc/squid/squid.conf 2>/dev/null
   else
@@ -79,11 +85,12 @@ create_trusted_users () {
   fi
 }
 
-replace_aliases () {
-  sed -i "s|LE_FQDN|${LE_FQDN}|g" /data/nginx/*.conf 2>/dev/null
-  sed -i "s|LE_FQDN|${LE_FQDN}|g" /data/nginx/stream/*.conf 2>/dev/null
-  sed -i "s|value-default|${COUNTAINER_ALIAS}|g" /data/nginx/stream/*.conf 2>/dev/null
-  sed -i "s|SERVER_ALIAS|${SERVER_ALIAS}|g" /data/nginx/stream/*.conf 2>/dev/null
+add_port() {
+  if [[ -n "${HTTP_PORT}" ]]; then
+    sed -i "s|http_squid_port|${HTTP_PORT}|g" /etc/squid/squid.conf 2>/dev/null
+  else
+    sed -i "s|http_squid_port|3128|g" /etc/squid/squid.conf 2>/dev/null
+  fi
 }
 
 create_log_dir() {
@@ -95,8 +102,8 @@ create_cache_dir() {
 }
 
 create_creds_dir
-replace_aliases
 create_trusted_users
+aad_port
 
 if [[ ! -f /etc/squid/squid_creds ]]; then
   create_creds

@@ -7,17 +7,14 @@ services:
     hostname: squid
     restart: always
     ports:
-      - '3128:3128'
+      - '8888:8888'
     volumes:
       - cache:/var/spool/squid
       - logs:/var/log
       - data:/etc/squid
-      - nginx:/data/nginx
     environment:
       - TZ=${EKB}
-      - LE_FQDN=${FQDN}
-      - COUNTAINER_ALIAS=${C_ALIAS}
-      - SERVER_ALIAS=${S_ALIAS}
+      - HTTP_PORT=${PORT}
       #- TRUSTED_IP=${T_IP}
     networks:
       - nginx
@@ -32,4 +29,3 @@ volumes:
   cache:
   logs:
   data:
-  nginx:
