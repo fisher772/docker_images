@@ -16,11 +16,10 @@ PATH_KEYS=/etc/ipsec.d
 PATH_IPSEC=/etc/ipsec.d/ipsec.docker
 PATH_CHAP_SECRETS=/etc/ppp/chap-secrets
 
-set TZ
- if [[ ! -z "${TZ}" ]]; then
-     cp /usr/share/zoneinfo/${TZ} /etc/localtime
-     echo ${TZ} >/etc/timezone
- fi
+if [[ ! -z "${TZ}" ]]; then
+  cp /usr/share/zoneinfo/${TZ} /etc/localtime
+  echo ${TZ} >/etc/timezone
+fi
 
 # mount vars in conf files
 export $(grep -v '^#' /tmp/.env | xargs)
