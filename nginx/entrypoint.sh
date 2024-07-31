@@ -87,6 +87,5 @@ mv -v /etc/nginx/stream.d /etc/nginx/stream.d.disabled 2>/dev/null
 ) &
 
 /usr/sbin/crond
-/usr/sbin/rsyslogd
 
 exec nginx -g "daemon off;"
