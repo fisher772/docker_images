@@ -103,7 +103,7 @@ create_cache_dir() {
 
 create_creds_dir
 create_trusted_users
-aad_port
+add_port
 
 if [[ ! -f /etc/squid/squid_creds ]]; then
   create_creds
