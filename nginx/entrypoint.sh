@@ -1,7 +1,6 @@
 #!/bin/bash
 echo "start nginx"
 
-set TZ
  if [[ ! -z "${TZ}" ]]; then
      cp /usr/share/zoneinfo/${TZ} /etc/localtime
      echo ${TZ} >/etc/timezone

@@ -7,9 +7,9 @@ services:
     hostname: vaultwarden
     restart: unless-stopped
     volumes:
-      - data:/data/
-      - logs:/var/log/vaultwarden
-      - nginx:/data/nginx
+      - vaultwarden_data:/data/
+      - vaultwarden_logs:/var/log/vaultwarden
+      - vaultwarden_nginx:/data/nginx
     environment:
       - TZ=${EKB}
       - LOG_FILE=${LOGS}
