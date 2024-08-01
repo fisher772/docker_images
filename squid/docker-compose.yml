@@ -22,6 +22,7 @@ services:
 
 networks:
   squid:
+    external: true
   nginx:
     external: true
 
