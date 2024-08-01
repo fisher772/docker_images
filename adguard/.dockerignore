@@ -1,0 +1,10 @@
+.env
+.git
+.github
+.gitignore
+scripts/change_resolve.sh
+docker-compose.yml
+Makefile
+make-vars.sh
+LICENSE.md
+README.md
