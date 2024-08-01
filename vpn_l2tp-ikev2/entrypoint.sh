@@ -10,7 +10,6 @@ PATH_IPSEC_CONF_REPLACE=/etc/ipsec.d/ipsec.docker/l2tp-ikev2.conf
 INTERFACE=${IPTABLES_INTERFACE:+-i ${IPTABLES_INTERFACE}} # will be empty if not set
 O_INTERFACE=${O_IPTABLES_INTERFACE:+-o ${O_IPTABLES_INTERFACE}} # will be empty if not set
 ENDPOINTS=${IPTABLES_ENDPOINTS:+-s ${IPTABLES_ENDPOINTS}} # will be empty if not set
-D_ENDPOINTS=${IPTABLES_ENDPOINTS:+-d ${IPTABLES_ENDPOINTS}} # will be empty if not set
 
 PATH_KEYS=/etc/ipsec.d
 PATH_IPSEC=/etc/ipsec.d/ipsec.docker
@@ -133,10 +132,12 @@ if [[ x${IPTABLES} == 'xtrue' ]]; then
   iptables -A FORWARD -i ppp+ -o ppp+ -j ACCEPT
   iptables -A FORWARD ${INTERFACE} -o ppp+ -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
   iptables -t filter -A FORWARD --match policy --pol ipsec --dir in --proto esp ${ENDPOINTS} -j ACCEPT
-  iptables -t filter -A FORWARD --match policy --pol ipsec --dir out --proto esp ${D_ENDPOINTS} -j ACCEPT
-  #iptables -t nat -A POSTROUTING ${ENDPOINTS} ${O_INTERFACE} -j SNAT --to-source ${SNAT_IP}
-  iptables -t nat -A POSTROUTING ${ENDPOINTS} ${O_INTERFACE} -j MASQUERADE
-  iptables -t nat -I POSTROUTING ${ENDPOINTS} -m policy --dir out --pol ipsec -j ACCEPT
+  if [[ ! -z ${SNAT_IP} ]]; then
+    iptables -t nat -A POSTROUTING ${ENDPOINTS} ${O_INTERFACE} -j SNAT --to-source ${SNAT_IP}
+  else
+    iptables -t nat -A POSTROUTING ${ENDPOINTS} ${O_INTERFACE} -j MASQUERADE
+    iptables -t nat -I POSTROUTING ${ENDPOINTS} -m policy --dir out --pol ipsec -j ACCEPT
+  fi
 fi
 
 revipt() {
@@ -152,10 +153,12 @@ if [[ x${IPTABLES} == 'xtrue' ]]; then
   iptables -D FORWARD -i ppp+ -o ppp+ -j ACCEPT
   iptables -D FORWARD ${INTERFACE} -o ppp+ -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
   iptables -t filter -D FORWARD --match policy --pol ipsec --dir in --proto esp ${ENDPOINTS} -j ACCEPT
-  iptables -t filter -D FORWARD --match policy --pol ipsec --dir out --proto esp ${D_ENDPOINTS} -j ACCEPT
-  #iptables -t nat -D POSTROUTING ${ENDPOINTS} ${O_INTERFACE} -j SNAT --to-source ${SNAT_IP}
-  iptables -t nat -D POSTROUTING ${ENDPOINTS} ${O_INTERFACE} -j MASQUERADE
-  iptables -t nat -D POSTROUTING ${ENDPOINTS} -m policy --dir out --pol ipsec -j ACCEPT
+  if [[ ! -z ${SNAT_IP} ]]; then
+    iptables -t nat -D POSTROUTING ${ENDPOINTS} ${O_INTERFACE} -j SNAT --to-source ${SNAT_IP}
+  else
+    iptables -t nat -D POSTROUTING ${ENDPOINTS} ${O_INTERFACE} -j MASQUERADE
+    iptables -t nat -D POSTROUTING ${ENDPOINTS} -m policy --dir out --pol ipsec -j ACCEPT
+  fi
 fi
 }
 
