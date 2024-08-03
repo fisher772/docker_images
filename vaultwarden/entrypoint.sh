@@ -9,3 +9,5 @@ replace_aliases () {
 }
 
 replace_aliases
+
+exit 0
