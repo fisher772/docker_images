@@ -1,6 +1,6 @@
 FROM vaultwarden/server:latest
 
-COPY settings/entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
 
 RUN mkdir -p /etc/rsyslog.d
