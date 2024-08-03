@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 replace_aliases () {
   sed -i "s|LE_FQDN|${LE_FQDN}|g" /data/nginx/*.conf 2>/dev/null
@@ -9,5 +9,7 @@ replace_aliases () {
 }
 
 replace_aliases
+
+exec /vaultwarden
 
 exit 0
