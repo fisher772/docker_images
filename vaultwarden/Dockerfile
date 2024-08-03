@@ -1,5 +1,8 @@
 FROM vaultwarden/server:latest
 
+COPY settings/entrypoint.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
+
 RUN mkdir -p /etc/rsyslog.d
 RUN mkdir -p /etc/logrotate.d
 RUN mkdir -p /data/nginx/stream
