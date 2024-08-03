@@ -8,5 +8,9 @@
     delaycompress
     dateext
     create 644 root root
+<<<<<<< HEAD
     dateformat -%Y-%m-%d-%s
+=======
+    dateformat -%Y-%m-%d
+>>>>>>> devops
 }

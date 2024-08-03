@@ -8,5 +8,5 @@
     delaycompress
     dateext
     create 644 ipsec ipsec
-    dateformat -%Y-%m-%d-%s
+    dateformat -%Y-%m-%d
 }
