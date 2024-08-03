@@ -49,7 +49,7 @@ TR_FQDN=$(echo "$LE_FQDN" | tr ',' ' ')
 sed -i "s|LE_FQDN|${TR_FQDN}|g" /etc/nginx/nginx.conf 2>/dev/null
 
 #replace SEC
-TR_VPN_ADDRESSES=$(echo "$VPN_ADDRESSES" | tr ',' '\n')
+TR_VPN_ADDRESSES=$(echo "$VPN_ADDRESSES" | tr ',' ' ')
 if [[ "$VPN_SEC" == "true" ]]; then
     sed -i "s|#deny all;|deny all;|g" /etc/nginx/conf.d/*.conf 2>/dev/null
     sed -i "s|allow all;|${TR_VPN_ADDRESSES}|g" /etc/nginx/conf.d/*.conf 2>/dev/null
