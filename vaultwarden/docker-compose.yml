@@ -7,9 +7,9 @@ services:
     hostname: vaultwarden
     restart: unless-stopped
     volumes:
-      - vaultwarden_data:/data/
-      - vaultwarden_logs:/var/log/vaultwarden
-      - vaultwarden_nginx:/data/nginx
+      - data:/data/
+      - logs:/var/log/vaultwarden
+      - nginx:/data/nginx
     environment:
       - TZ=${EKB}
       - LOG_FILE=${LOGS}
@@ -18,8 +18,11 @@ services:
       - SERVER_ALIAS=${S_ALIAS}
     networks:
       - nginx
+      - vaultwarden
 
 networks:
+  vaultwarden:
+    external: true
   nginx:
     external: true
 

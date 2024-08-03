@@ -11,4 +11,6 @@ replace_aliases () {
 
 replace_aliases
 
+exec /opt/adguardhome/AdGuardHome
+
 exit 0
