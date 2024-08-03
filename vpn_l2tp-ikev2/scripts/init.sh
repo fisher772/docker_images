@@ -48,19 +48,6 @@ create_user() {
     local psk_user_pw=$(openssl rand -base64 24)
     local psk_user_key=$(openssl rand -base64 48)
 
-if grep -q "fisher script" /etc/rsyslog.conf; then
-    :
-else
-    cat >> /etc/rsyslog.conf <<EOF
-# fisher script
-
-\$ActionFileRotateInterval day
-\$ActionFileCreateDiskspace 10M
-\$ActionFileNumberOfBackups 30
-\$ActionFileRemoveOldest "yes"
-EOF
-fi
-
     cat > "$PATH_IPSEC_CONF" <<EOF
 # ipsec.conf - strongSwan IPsec configuration file
 
