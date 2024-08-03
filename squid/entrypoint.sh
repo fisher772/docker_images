@@ -84,6 +84,14 @@ create_trusted_users () {
   fi
 }
 
+add_dns() {
+  if [[ -n "${DNS_VALUE}" ]]; then
+    sed -i "s|dns_default_value|${DNS_VALUE}|g" /etc/squid/squid.conf 2>/dev/null
+  else
+    sed -i "s|dns_default_value|8.8.8.8 8.8.4.4|g" /etc/squid/squid.conf 2>/dev/null
+  fi
+}
+
 add_port() {
   if [[ -n "${HTTP_PORT}" ]]; then
     sed -i "s|http_squid_port|${HTTP_PORT}|g" /etc/squid/squid.conf 2>/dev/null
@@ -102,6 +110,7 @@ create_cache_dir() {
 
 create_creds_dir
 create_trusted_users
+add_dns
 add_port
 
 if [[ ! -f /etc/squid/squid_creds ]]; then
