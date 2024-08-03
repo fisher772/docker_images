@@ -1,10 +1,5 @@
 #!/bin/sh
 
-if [[ ! -z "${TZ}" ]]; then
-  cp /usr/share/zoneinfo/${TZ} /etc/localtime
-  echo ${TZ} >/etc/timezone
-fi
-
 replace_aliases () {
   sed -i "s|LE_FQDN|${LE_FQDN}|g" /data/nginx/*.conf 2>/dev/null
   sed -i "s|LE_FQDN|${LE_FQDN}|g" /data/nginx/stream/*.conf 2>/dev/null
@@ -14,3 +9,5 @@ replace_aliases () {
 }
 
 replace_aliases
+
+exit 0

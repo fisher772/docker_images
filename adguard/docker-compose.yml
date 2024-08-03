@@ -29,6 +29,9 @@ services:
       - LE_FQDN=${FQDN}
       - COUNTAINER_ALIAS=${C_ALIAS}
       - SERVER_ALIAS=${S_ALIAS}
+    networks:
+      - adguard
+      - nginx
 
 networks:
   adguard:
