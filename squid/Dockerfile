@@ -11,6 +11,7 @@ ENV SQUID_CACHE_DIR=/var/spool/squid \
 
 RUN echo "0 0 * * * /usr/sbin/logrotate /etc/logrotate.conf" | crontab -
 
+RUN mkdir -p /etc/squid/ssl
 RUN mkdir -p /etc/rsyslog.d
 RUN mkdir -p /etc/logrotate.d
 

@@ -84,6 +84,31 @@ create_trusted_users () {
   fi
 }
 
+gen_dh() {
+  if [ ! -f /etc/squid/ssl/dhparams.pem ]; then
+    echo "make dhparams"
+    cd /etc/squid/ssl
+    openssl dhparam -out dhparams.pem 2048
+    chmod 600 dhparams.pem
+    chown -R proxy:proxy /etc/squid/ssl
+  fi
+}
+
+add_le_ssl() {
+  if [[ "$SSL_STATUS" == "true" ]]; then
+    sed -i "s|#https_port|https_port|g" /etc/squid/squid.conf 2>/dev/null
+    sed -i "s|SSL_CERT|${SSL_CERT}|g" /etc/squid/squid.conf 2>/dev/null
+    sed -i "s|SSL_KEY|${SSL_KEY}|g" /etc/squid/squid.conf 2>/dev/null
+    if [[ -n "${HTTPS_PORT}" ]]; then
+      sed -i "s|https_squid_port|${HTTPS_PORT}|g" /etc/squid/squid.conf 2>/dev/null
+    else
+      :
+    fi
+  else
+    :
+  fi
+}
+
 add_dns() {
   if [[ -n "${DNS_VALUE}" ]]; then
     sed -i "s|dns_default_value|${DNS_VALUE}|g" /etc/squid/squid.conf 2>/dev/null
@@ -110,6 +135,8 @@ create_cache_dir() {
 
 create_creds_dir
 create_trusted_users
+gen_dh
+add_le_ssl
 add_dns
 add_port
 
