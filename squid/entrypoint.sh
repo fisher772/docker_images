@@ -95,7 +95,7 @@ gen_dh() {
 }
 
 add_le_ssl() {
-  if [[ "$SSL_STATUS" == "true" ]]; then
+  if [[ "$HTTPS_STATUS" == "true" ]]; then
     sed -i "s|#https_port|https_port|g" /etc/squid/squid.conf 2>/dev/null
     sed -i "s|SSL_CERT|${SSL_CERT}|g" /etc/squid/squid.conf 2>/dev/null
     sed -i "s|SSL_KEY|${SSL_KEY}|g" /etc/squid/squid.conf 2>/dev/null
