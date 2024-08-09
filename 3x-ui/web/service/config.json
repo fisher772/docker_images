@@ -1,6 +1,6 @@
 {
   "log": {
-    "access": "none",
+    "access": "./access.log",
     "dnsLog": false,
     "error": "./error.log",
     "loglevel": "warning"
@@ -74,6 +74,17 @@
         "outboundTag": "blocked",
         "protocol": [
           "bittorrent"
+        ]
+      },
+      {
+        "type": "field",
+        "outboundTag": "blocked",
+        "domain": [
+          "geosite:category-ads-all",
+          "ext:geosite_IR.dat:category-ads-all",
+          "ext:geosite_IR.dat:malware",
+          "ext:geosite_IR.dat:phishing",
+          "ext:geosite_IR.dat:cryptominers"
         ]
       }
     ]
