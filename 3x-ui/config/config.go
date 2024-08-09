@@ -54,6 +54,14 @@ func GetBinFolderPath() string {
 	return binFolderPath
 }
 
+func GetCredsFolderPath() string {
+	credsFolderPath := os.Getenv("XUI_DB_FOLDER")
+	if credsFolderPath == "" {
+		credsFolderPath = "/etc/x-ui"
+	}
+	return credsFolderPath
+}
+
 func GetDBFolderPath() string {
 	dbFolderPath := os.Getenv("XUI_DB_FOLDER")
 	if dbFolderPath == "" {
