@@ -57,7 +57,7 @@ func GetBinFolderPath() string {
 func GetCredsFolderPath() string {
 	credsFolderPath := os.Getenv("XUI_CREDS_FOLDER")
 	if credsFolderPath == "" {
-		credsFolderPath = "/etc/x-ui/panel_creds"
+		credsFolderPath = "/etc/x-ui/board_creds"
 	}
 	return credsFolderPath
 }
