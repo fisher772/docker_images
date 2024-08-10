@@ -36,6 +36,12 @@ COPY --from=builder /app/build/ /app/
 COPY --from=builder /app/DockerEntrypoint.sh /app/
 COPY --from=builder /app/x-ui.sh /usr/bin/x-ui
 
+# Configure nginx
+RUN mkdir -p /data/nginx/stream
+
+COPY /settings/service-3xui.conf /data/nginx/service-3xui.conf
+COPY /settings/stream/stream-3xui.conf /data/nginx/stream/stream-3xui.conf
+
 # Configure fail2ban
 RUN rm -f /etc/fail2ban/jail.d/alpine-ssh.conf \
   && cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local \
@@ -47,6 +53,8 @@ RUN chmod +x \
   /app/DockerEntrypoint.sh \
   /app/x-ui \
   /usr/bin/x-ui
+
+EXPOSE 62222/tcp 62222/udp 63333/tcp 63333/udp 64444/tcp
 
 VOLUME [ "/etc/x-ui" ]
 CMD [ "./x-ui" ]
