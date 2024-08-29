@@ -4,10 +4,6 @@ RUN set -xe \
     && apk add --no-cache --update sudo bash tzdata rsyslog logrotate\
     iptables iptables-legacy openssl strongswan xl2tpd
 
-ARG ENV_FILE=.env
-
-COPY $ENV_FILE /tmp/.env
-
 COPY settings/ipsec.docker.secrets /etc/ipsec.d/ipsec.docker/ipsec.docker.secrets
 
 COPY scripts/init.sh /init.sh

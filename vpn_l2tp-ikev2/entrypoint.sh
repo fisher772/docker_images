@@ -20,9 +20,6 @@ if [[ ! -z "${TZ}" ]]; then
   echo ${TZ} >/etc/timezone
 fi
 
-# mount vars in conf files
-export $(grep -v '^#' /tmp/.env | xargs)
-
 create_user() {
     echo "Cleaning credentials..."
 
