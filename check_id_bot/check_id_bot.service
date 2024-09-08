@@ -1,0 +1,15 @@
+[Unit]
+Description=Telegram Check Id Bot
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/user/check-id-bot
+EnvironmentFile=/home/user/check-id-bot/.env
+ExecStart=/home/user/check-id-bot/venv/bin/python -m bot
+KillMode=process
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

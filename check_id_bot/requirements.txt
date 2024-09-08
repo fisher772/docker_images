@@ -1,0 +1,4 @@
+aiogram==3.13.0
+pydantic==2.8.0
+pydantic_settings==2.4.0
+structlog==24.4.0

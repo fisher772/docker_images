@@ -1,0 +1,14 @@
+checker
+venv
+bot/**/__pycache__
+docker-compose.yml
+workflow-compose.yml
+LICENSE.md
+README.md*
+Makefile
+make-vars.sh
+.gitignore
+.git
+.github
+.vscode
+.cache
