@@ -23,8 +23,6 @@ bot = Bot(
     )
 )
 
-dp = Dispatcher()
-
 async def get_username():
     bot_get_username = await bot.get_me()
     bot_username = bot_get_username.username
