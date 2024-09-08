@@ -1,4 +1,4 @@
-from aiogram import Bot, Dispatcher
+from aiogram import Bot
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
@@ -22,8 +22,6 @@ bot = Bot(
     parse_mode=ParseMode.HTML,
     )
 )
-
-dp = Dispatcher()
 
 async def get_username():
     bot_get_username = await bot.get_me()
