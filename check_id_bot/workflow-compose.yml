@@ -1,0 +1,15 @@
+---
+
+services:
+  check_id:
+    image: ${IMAGE}
+    container_name: check_id
+    hostname: check_id
+    restart: unless-stopped
+    volumes:
+      - bot:/app/bot
+    environment:
+      - TZ=${EKB}
+
+volumes:
+  bot:
