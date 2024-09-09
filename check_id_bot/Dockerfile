@@ -10,7 +10,6 @@ RUN pip install --no-cache-dir --upgrade pip \
 FROM gcr.io/distroless/python3
 WORKDIR /app
 COPY --from=compile-image /opt/venv /app/venv
-ENV PYTHONPATH="/app/venv/lib/python3.11/site-packages"
+ENV PYTHONPATH="/app/venv/lib/python3.12/site-packages"
 COPY bot /app/bot
-#CMD ["python", "sites_parser.py"]
 CMD ["-m", "bot"]
