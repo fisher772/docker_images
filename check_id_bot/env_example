@@ -1,0 +1,23 @@
+# Rename this file to ".env" or create new ".env" file and paste variables
+
+# Bot token, get one from https://t.me/botfather
+BOT_TOKEN=YOUR_TOKEN
+
+### Logging configuration ###
+
+# Render mode: pretty with "console", or more production-like with "json"
+# Warning: case-sensitive!
+LOGGING_RENDERER=console
+
+# Minimum logging level: DEBUG, INFO, WARNING, ERROR or CRITICAL
+# Warning: case-sensitive!
+LOGGING_LEVEL=INFO
+
+# Datetime format for logs
+LOGGING_FORMAT=%Y-%m-%d %H:%M:%S
+
+# true/yes/1 if you want to show time in UTC timezone instead of computer's local tz
+LOGGING_IS_UTC=no
+
+# true/yes/1 if you want to log unhandled updates (updates which your bot received but could not find handler to answer)
+LOGGING_LOG_UNHANDLED=no

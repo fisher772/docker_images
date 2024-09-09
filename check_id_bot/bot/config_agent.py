@@ -5,15 +5,28 @@ from aiogram.enums import ParseMode
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-class BotSerttings(BaseSettings):
+class LogSettings(BaseSettings):
+    level: str = "INFO"
+    fromat: str = "%Y-%m-%d %H:%M:%S"
+    utc: bool = False
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="UTF-8",
+        env_prefix="LOGGING_",
+        extra="allow",
+    )
+
+class BotSettings(BaseSettings):
     bot_token: SecretStr
     
     model_config = SettingsConfigDict(
         env_file='.env',
+        env_file_encoding="UTF-8",
         extra="allow",
     )
 
-bot_config = BotSerttings()
+bot_config = BotSettings()
 
 
 bot = Bot(
