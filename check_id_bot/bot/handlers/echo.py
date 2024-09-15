@@ -1,6 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import Message
 
+
 router = Router()
 router.message.filter(F.text, ~F.text.startswith('/'))
 

@@ -1,12 +1,9 @@
 from typing import Any, Awaitable, Callable, Dict
 
-import structlog
 from aiogram import BaseMiddleware
 from aiogram.dispatcher.event.bases import UNHANDLED
 from aiogram.types import TelegramObject
-from structlog.typing import FilteringBoundLogger
-
-logger: FilteringBoundLogger = structlog.get_logger()
+from bot.config_agent import logger
 
 
 class UnhandledUpdatesLoggerMiddleware(BaseMiddleware):
