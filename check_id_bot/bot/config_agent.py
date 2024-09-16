@@ -3,11 +3,14 @@ import structlog
 from aiogram import Bot
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from aiogram.client.session.aiohttp import AiohttpSession
+from aiohttp import BasicAuth
 
 from enum import StrEnum, auto
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from structlog.typing import FilteringBoundLogger
+
 
 
 logger: FilteringBoundLogger = structlog.get_logger()
@@ -57,20 +60,18 @@ bot_config = BotSettings()
 proxy_config = ProxySettings()
 
 
-if proxy_config.status is True:
-    default_properties = DefaultBotProperties(
-        parse_mode=ParseMode.HTML,
-        proxy=proxy_config.address,
-        proxy_auth=(proxy_config.login, proxy_config.password)
-    )
+if proxy_config.status:
+  auth = BasicAuth(proxy_config.login, proxy_config.password)
+  session = AiohttpSession(proxy=(proxy_config.address, auth))
 else:
-    default_properties = DefaultBotProperties(
-        parse_mode=ParseMode.HTML
-    )
+  session = AiohttpSession()
+
 
 bot = Bot(
     bot_config.bot_token.get_secret_value(),
-    default=default_properties
+    default=DefaultBotProperties(
+      parse_mode=ParseMode.HTML
+    )
 )
 
 async def get_username():
