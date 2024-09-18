@@ -1,0 +1,24 @@
+---
+
+services:
+  jenkins:
+    image: jenkins/jenkins
+    container_name: jenkins
+    hostname: jenkins
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+      - '50000:50000'
+    volumes:
+      - data:/var/jenkins_home
+
+networks:
+  jenkins:
+    external: true
+  nginx:
+    external: true
+
+volumes:
+  data:
+    external: true
+    #name: data
