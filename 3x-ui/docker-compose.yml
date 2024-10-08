@@ -17,6 +17,8 @@ services:
     environment:
       XRAY_VMESS_AEAD_FORCED: "false"
       LE_FQDN: ${FQDN}
+      CONTAINER_ALIAS: ${C_ALIAS}
+      SERVER_ALIAS: ${S_ALIAS}
     networks:
       - 3xui
       - nginx
