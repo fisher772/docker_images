@@ -12,3 +12,5 @@ make-vars.sh
 .github
 .vscode
 .cache
+Jenkinsfile
+env_example

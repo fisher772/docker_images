@@ -9,12 +9,14 @@ services:
     volumes:
       - data:/data/
       - logs:/var/log/vaultwarden
-      - nginx:/data/nginx
+      - nginx_ssl:/data/nginx
+      - nginx_conf:/data/nginx/conf
+      - nginx_stream:/data/nginx/stream
     environment:
       - TZ=${EKB}
       - LOG_FILE=${LOGS}
       - LE_FQDN=${FQDN}
-      - COUNTAINER_ALIAS=${C_ALIAS}
+      - CONTAINER_ALIAS=${C_ALIAS}
       - SERVER_ALIAS=${S_ALIAS}
     networks:
       - nginx
@@ -29,4 +31,9 @@ networks:
 volumes:
   data:
   logs:
-  nginx:
+  nginx_ssl:
+    name: nginx_ssl
+  nginx_conf:
+    name: nginx_conf
+  nginx_stream:
+    name: nginx_stream

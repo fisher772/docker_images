@@ -1,0 +1,11 @@
+github
+pipeline-github
+git
+git-client
+ssh-steps
+docker-plugin
+docker-commons
+docker-workflow
+jobcacher
+htmlpublisher
+timestamper
