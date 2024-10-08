@@ -13,7 +13,7 @@ services:
       - cache:/var/spool/squid
       - logs:/var/log
       - data:/etc/squid
-      - ssl:/etc/squid/ssl
+      - nginx_ssl:/etc/squid/ssl
     environment:
       - TZ=${EKB}
       - HTTP_PORT=${HTTP_PORT}
@@ -24,17 +24,15 @@ services:
       - SSL_KEY=${SSL_K}
       #- TRUSTED_IP=${T_IP}
     networks:
-      - nginx
       - squid
 
 networks:
   squid:
-    external: true
-  nginx:
     external: true
 
 volumes:
   cache:
   logs:
   data:
-  ssl:
+  nginx_ssl:
+    name: nginx_ssl

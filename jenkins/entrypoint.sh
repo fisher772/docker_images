@@ -10,6 +10,6 @@ replace_aliases () {
 
 replace_aliases
 
-exec /vaultwarden
+/usr/local/bin/jenkins.sh
 
 exit 0

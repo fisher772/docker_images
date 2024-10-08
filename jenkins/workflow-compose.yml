@@ -1,0 +1,44 @@
+---
+
+services:
+  # jenkins-docker:
+  #   image: docker:dind
+  #   container_name: jenkins-docker
+  #   hostname: jenkins-docker
+  #   restart: unless-stopped
+  #   expose:
+  #     - '2376'
+  #   networks:
+  #     - jenkins
+
+  jenkins:
+    image: ${IMAGE}
+    container_name: jenkins
+    hostname: jenkins
+    restart: unless-stopped
+    expose:
+      - '8080'
+      - '50000'
+    volumes:
+      - home:/var/jenkins_home
+      - nginx_ssl:/data/nginx
+    environment:
+      - TZ= ${EKB}
+      - LE_FQDN=${FQDN}
+      - CONTAINER_ALIAS=${C_ALIAS}
+      - SERVER_ALIAS=${S_ALIAS}
+      #- DOCKER_HOST=tcp://jenkins-docker:2376
+    networks:
+      - jenkins
+      - nginx
+
+networks:
+  jenkins:
+    external: true
+  nginx:
+    external: true
+
+volumes:
+  home:
+  nginx_ssl:
+    external: true

@@ -37,9 +37,9 @@ COPY --from=builder /app/DockerEntrypoint.sh /app/
 COPY --from=builder /app/x-ui.sh /usr/bin/x-ui
 
 # Configure nginx
-RUN mkdir -p /data/nginx/stream
+RUN mkdir -p /data/nginx/stream conf ssl
 
-COPY /settings/service-3xui.conf /data/nginx/service-3xui.conf
+COPY /settings/service-3xui.conf /data/nginx/conf/service-3xui.conf
 COPY /settings/stream/stream-3xui.conf /data/nginx/stream/stream-3xui.conf
 
 # Configure fail2ban
