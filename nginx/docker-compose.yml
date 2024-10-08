@@ -36,14 +36,8 @@ networks:
 
 volumes:
   ssl:
-<<<<<<< HEAD
-  conf:
-  logs:
-  le:
-=======
   data:
   logs:
   le:
   conf:
   stream:
->>>>>>> devops
