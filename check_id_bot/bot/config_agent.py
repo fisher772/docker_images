@@ -12,6 +12,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from structlog.typing import FilteringBoundLogger
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> devops
 logger: FilteringBoundLogger = structlog.get_logger()
 
 class LogRenderer(StrEnum):

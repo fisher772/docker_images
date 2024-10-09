@@ -1,0 +1,52 @@
+---
+
+services:
+  adguard:
+    image: ${IMAGE}
+    container_name: adguard
+    hostname: adguard
+    restart: always
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      #- 67:67/udp
+      #- 68:68/udp
+      #- 80:80/tcp
+      #- 443:443/tcp
+      #- 443:443/udp
+      #- 3000:3000/tcp
+      #- 784:784/udp 
+      #- 853:853/udp 
+      #- 8853:8853/udp
+      #- 5443:5443/tcp
+      #- 5443:5443/udp
+    volumes:
+      - work:/opt/adguardhome/work
+      - conf:/opt/adguardhome/conf
+      - nginx_ssl:/data/nginx
+      - nginx_conf:/data/nginx/conf
+      - nginx_stream:/data/nginx/stream
+    environment:
+      - TZ=${EKB}
+      - LE_FQDN=${FQDN}
+      - CONTAINER_ALIAS=${C_ALIAS}
+      - SERVER_ALIAS=${S_ALIAS}
+    networks:
+      - adguard
+      - nginx
+
+networks:
+  adguard:
+    external: true
+  nginx:
+    external: true
+
+volumes:
+  work:
+  conf:
+  nginx_ssl:
+    name: nginx_ssl
+  nginx_conf:
+    name: nginx_conf
+  nginx_stream:
+    name: nginx_stream
