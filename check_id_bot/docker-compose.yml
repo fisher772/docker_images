@@ -10,6 +10,11 @@ services:
       - bot:/app/bot
     environment:
       - TZ=${EKB}
+    networks:
+      - checker
+
+networks:
+  checker:
 
 volumes:
   bot:

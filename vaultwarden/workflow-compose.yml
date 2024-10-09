@@ -1,0 +1,39 @@
+---
+
+services:
+  vaultwarden:
+    image: ${IMAGE}
+    container_name: vaultwarden
+    hostname: vaultwarden
+    restart: unless-stopped
+    volumes:
+      - data:/data/
+      - logs:/var/log/vaultwarden
+      - nginx_ssl:/data/nginx
+      - nginx_conf:/data/nginx/conf
+      - nginx_stream:/data/nginx/stream
+    environment:
+      - TZ=${EKB}
+      - LOG_FILE=${LOGS}
+      - LE_FQDN=${FQDN}
+      - CONTAINER_ALIAS=${C_ALIAS}
+      - SERVER_ALIAS=${S_ALIAS}
+    networks:
+      - nginx
+      - vaultwarden
+
+networks:
+  vaultwarden:
+    external: true
+  nginx:
+    external: true
+
+volumes:
+  data:
+  logs:
+  nginx_ssl:
+    name: nginx_ssl
+  nginx_conf:
+    name: nginx_conf
+  nginx_stream:
+    name: nginx_stream
