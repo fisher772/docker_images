@@ -3,10 +3,7 @@ from aiogram.filters import Command, CommandObject
 from aiogram.types import Message
 from bot.config_agent import get_username
 
-<<<<<<< HEAD
-=======
 
->>>>>>> devops
 router = Router()
 
 @router.message(Command("id"))
