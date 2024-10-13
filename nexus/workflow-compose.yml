@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     volumes:
       - nexus_data:/nexus-data
-      - nginx_conf:/data/nginx/conf
+      - nexus_nginx_conf:/data/nginx
       - nginx_stream:/data/nginx/stream
     environment:
       TZ: ${EKB}
@@ -23,11 +23,9 @@ services:
 
 volumes:
   nexus_data:
-    name: nexus_data
-  nginx_conf:
-    name: nginx_conf
-  nginx_stream:
-    name: nginx_stream
+    external: true
+  nexus_nginx_conf:
+    external: true
 
 networks:
   nginx:
