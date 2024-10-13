@@ -23,9 +23,8 @@ services:
     volumes:
       - work:/opt/adguardhome/work
       - conf:/opt/adguardhome/conf
-      - nginx_ssl:/data/nginx
-      - nginx_conf:/data/nginx/conf
-      - nginx_stream:/data/nginx/stream
+      - nginx_ssl:/data/nginx/ssl
+      - adguard_nginx_conf:/data/nginx
     environment:
       - TZ=${EKB}
       - LE_FQDN=${FQDN}
@@ -43,10 +42,10 @@ networks:
 
 volumes:
   work:
+    external: true
   conf:
+    external: true
   nginx_ssl:
-    name: nginx_ssl
-  nginx_conf:
-    name: nginx_conf
-  nginx_stream:
-    name: nginx_stream
+    external: true
+  adguard_nginx_conf:
+    external: true

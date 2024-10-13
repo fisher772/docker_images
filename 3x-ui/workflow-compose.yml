@@ -12,8 +12,7 @@ services:
     volumes:
       - db:/etc/x-ui
       - nginx_ssl:/root/cert
-      - nginx_conf:/data/nginx/conf
-      - nginx_stream:/data/nginx/stream
+      - 3xui_nginx_conf:/data/nginx
     environment:
       XRAY_VMESS_AEAD_FORCED: "false"
       LE_FQDN: ${FQDN}
@@ -28,13 +27,11 @@ networks:
     external: true
   nginx:
     external: true
-    
 
 volumes:
   db:
+    external: true
   nginx_ssl:
-    name: nginx_ssl
-  nginx_conf:
-    name: nginx_conf
-  nginx_stream:
-    name: nginx_stream
+    external: true
+  3xui_nginx_conf:
+    external: true

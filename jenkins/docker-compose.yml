@@ -18,9 +18,8 @@ services:
     restart: unless-stopped
     volumes:
       - home:/var/jenkins_home
-      - nginx_ssl:/data/nginx
-      - nginx_conf:/data/nginx/conf
-      - nginx_stream:/data/nginx/stream
+      - nginx_ssl:/data/nginx/ssl
+      - jenkins_nginx_conf:/data/nginx
     environment:
       - TZ=${EKB}
       - LE_FQDN=${FQDN}
@@ -41,7 +40,5 @@ volumes:
   home:
   nginx_ssl:
     name: nginx_ssl
-  nginx_conf:
-    name: nginx_conf
-  nginx_stream:
-    name: nginx_stream
+  jenkins_nginx_conf:
+    name: jenkins_nginx_conf

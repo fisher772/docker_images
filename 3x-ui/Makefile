@@ -8,9 +8,15 @@ FULL_IMAGE_NAME_LATEST=${IMAGE_NAME}:latest
 
 VERSION:=
 
-REMOTE_REGISTRY_NAME:=
+NGINX_MOUNT:=/var/lib/docker/volumes/nginx_conf/_data/conf.d-le
+
+REMOTE_REGISTRY_NAME?=
 DOCKER_USER:=
 DOCKER_TOKEN:=
+
+copy:
+	@echo "Copying the conf nginx files..."
+	cp -fv settings/**/*.conf ${NGINX_MOUNT}
 
 build:
 	@echo "Building the image..."
@@ -51,3 +57,4 @@ help:
 	@echo "  make all     - Starting all blocks"
 	@echp "  make vars    - Use the automatic assignment of dynamic values for variables at your discretion"
 	@echo "  make help    - Display this help message"
+	@echo "  make copy    - Delivery of nginx configuration files to docker nginx volume in path: /var/lib/docker/volumes/nginx_conf/_data/conf.d-le"

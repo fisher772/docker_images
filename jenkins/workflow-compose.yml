@@ -21,7 +21,8 @@ services:
       - '50000'
     volumes:
       - home:/var/jenkins_home
-      - nginx_ssl:/data/nginx
+      - nginx_ssl:/data/nginx/ssl
+      - jenkins_nginx_conf:/data/nginx
     environment:
       - TZ= ${EKB}
       - LE_FQDN=${FQDN}
@@ -40,5 +41,8 @@ networks:
 
 volumes:
   home:
+    external: true
   nginx_ssl:
+    external: true
+  jenkins_nginx_conf:
     external: true
