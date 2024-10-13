@@ -32,7 +32,10 @@ networks:
 
 volumes:
   cache:
+    external: true
   logs:
+    external: true
   data:
+    external: true
   nginx_ssl:
-    name: nginx_ssl
+    external: true

@@ -1,0 +1,26 @@
+---
+
+services:
+  postgres:
+    image: ${IMAGE}
+    container_name: postgres
+    hostname: postgres
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      TZ: ${EKB}
+      POSTGRES_MULTIPLE_DATABASES: ${DB_MULTIPLE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - postgres
+
+
+volumes:
+  postgres_data:
+    external: true
+
+networks:
+  postgres:
+    external: true

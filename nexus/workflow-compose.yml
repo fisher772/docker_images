@@ -1,0 +1,36 @@
+---
+
+services:
+  nexus:
+    image: ${IMAGE}
+    container_name: nexus
+    hostname: nexus
+    restart: unless-stopped
+    volumes:
+      - nexus_data:/nexus-data
+      - nginx_conf:/data/nginx/conf
+      - nginx_stream:/data/nginx/stream
+    environment:
+      TZ: ${EKB}
+      CONTEXT_PATH: ${URL_CONTEXTPATH}
+      LE_FQDN: ${FQDN}
+      CONTAINER_ALIAS: ${C_ALIAS}
+      SERVER_ALIAS: ${S_ALIAS}
+    networks:
+      - nexus
+      - nginx
+
+
+volumes:
+  nexus_data:
+    name: nexus_data
+  nginx_conf:
+    name: nginx_conf
+  nginx_stream:
+    name: nginx_stream
+
+networks:
+  nginx:
+    external: true
+  nexus:
+    external: true

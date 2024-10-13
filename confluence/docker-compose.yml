@@ -1,0 +1,49 @@
+---
+
+services:
+  confluence:
+    image: fisher772/confluence
+    container_name: confluence
+    hostname: confluence
+    restart: unless-stopped
+    volumes:
+      - confluence_home:/var/atlassian/application-data/confluence
+      - confluence_install:/opt/atlassian/confluence
+      - nginx_conf:/data/nginx/conf
+      - nginx_stream:/data/nginx/stream
+    environment:
+      TZ: ${EKB}
+      ATL_TOMCAT_CONTEXTPATH: ${URL_CONTEXTPATH}
+      ATL_DB_TYPE: ${DB_TYPE}
+      ATL_DB_DRIVER: ${DB_DRIVER}
+      ATL_JDBC_USER: ${DB_USER}
+      ATL_JDBC_PASSWORD: ${DB_PASSWORD}
+      ATL_JDBC_URL: ${DB_URL}
+      LE_FQDN: ${FQDN}
+      CONTAINER_ALIAS: ${C_ALIAS}
+      SERVER_ALIAS: ${S_ALIAS}
+    networks:
+      - confluence
+      - postgres
+      - nginx
+    depends_on:
+      - postgres
+
+
+volumes:
+  confluence_home:
+    name: confluence_home
+  confluence_install:
+    name: confluence_install
+  nginx_conf:
+    name: nginx_conf
+  nginx_stream:
+    name: nginx_stream
+
+networks:
+  nginx:
+    external: true
+  confluence:
+    external: true
+  postgres:
+    external: true

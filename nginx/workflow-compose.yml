@@ -14,8 +14,6 @@ services:
       - data:/etc/nginx
       - logs:/var/log/nginx
       - le:/var/log/letsencrypt
-      - conf:/etc/nginx/conf.d-le
-      - stream:/etc/nginx/stream.d-le
     environment:
       - TZ=${EKB}
       - LETSENCRYPT=${STATUS}
@@ -36,8 +34,10 @@ networks:
 
 volumes:
   ssl:
+    external: true
   data:
+    external: true
   logs:
+    external: true
   le:
-  conf:
-  stream:
+    external: true

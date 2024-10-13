@@ -1,0 +1,33 @@
+---
+
+services:
+  nexus:
+    image: fisher772/nexus
+    container_name: nexus
+    hostname: nexus
+    restart: unless-stopped
+    volumes:
+      - nexus_data:/nexus-data
+      - nexus_nginx_conf:/data/nginx
+    environment:
+      TZ: ${EKB}
+      NEXUS_CONTEXT: ${URL_CONTEXTPATH}
+      LE_FQDN: ${FQDN}
+      CONTAINER_ALIAS: ${C_ALIAS}
+      SERVER_ALIAS: ${S_ALIAS}
+    networks:
+      - nexus
+      - nginx
+
+
+volumes:
+  nexus_data:
+    name: nexus_data
+  nexus_nginx_conf:
+    name: nexus_nginx_conf
+
+networks:
+  nginx:
+    external: true
+  nexus:
+    external: true

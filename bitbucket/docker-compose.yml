@@ -1,0 +1,44 @@
+---
+
+services:
+  bitbucket:
+    image: fisher772/bitbucket
+    container_name: bitbucket
+    hostname: bitbucket
+    restart: unless-stopped
+    volumes:
+      - bitbucket_home:/var/atlassian/application-data/bitbucket
+      - bitbucket_install:/opt/atlassian/bitbucket
+      - bitbucket_nginx_conf:/data/nginx
+    environment:
+      TZ: ${EKB}
+      ATL_TOMCAT_CONTEXTPATH: ${URL_CONTEXTPATH}
+      ATL_DB_TYPE: ${DB_TYPE}
+      ATL_DB_DRIVER: ${DB_DRIVER}
+      ATL_JDBC_USER: ${DB_USER}
+      ATL_JDBC_PASSWORD: ${DB_PASSWORD}
+      ATL_JDBC_URL: ${DB_URL}
+      LE_FQDN: ${FQDN}
+      CONTAINER_ALIAS: ${C_ALIAS}
+      SERVER_ALIAS: ${S_ALIAS}
+    networks:
+      - bitbucket
+      - postgres
+      - nginx
+
+
+volumes:
+  bitbucket_home:
+    name: bitbucket_home
+  bitbucket_install:
+    name: bitbucket_install
+  bitbucket_nginx_conf:
+    name: bitbucket_nginx_conf
+
+networks:
+  nginx:
+    external: true
+  bitbucket:
+    external: true
+  postgres:
+    external: true

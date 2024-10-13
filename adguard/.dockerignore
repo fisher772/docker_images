@@ -4,6 +4,7 @@
 .gitignore
 scripts/change_resolve.sh
 docker-compose.yml
+workflow-compose.yml
 Makefile
 make-vars.sh
 LICENSE.md

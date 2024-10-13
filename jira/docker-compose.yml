@@ -1,0 +1,46 @@
+---
+
+services:
+  jira:
+    image: fisher772/jira
+    container_name: jira
+    hostname: jira
+    restart: unless-stopped
+    volumes:
+      - jira_home:/var/atlassian/application-data/jira
+      - jira_install:/opt/atlassian/jira
+      - jira_nginx_conf:/data/nginx
+    environment:
+      TZ: ${EKB}
+      ATL_TOMCAT_CONTEXTPATH: ${URL_CONTEXTPATH}
+      ATL_DB_TYPE: ${DB_TYPE}
+      ATL_DB_DRIVER: ${DB_DRIVER}
+      ATL_JDBC_USER: ${DB_USER}
+      ATL_JDBC_PASSWORD: ${DB_PASSWORD}
+      ATL_JDBC_URL: ${DB_URL}
+      LE_FQDN: ${FQDN}
+      CONTAINER_ALIAS: ${C_ALIAS}
+      SERVER_ALIAS: ${S_ALIAS}
+    networks:
+      - jira
+      - postgres
+      - nginx
+    depends_on:
+      - postgres
+
+
+volumes:
+  jira_home:
+    name: jira_home
+  jira_install:
+    name: jira_install
+  jira_nginx_conf:
+    name: jira_nginx_conf
+
+networks:
+  nginx:
+    external: true
+  jira:
+    external: true
+  postgres:
+    external: true
