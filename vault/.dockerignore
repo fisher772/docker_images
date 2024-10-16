@@ -1,0 +1,12 @@
+.env
+.git
+.github
+.gitignore
+docker-compose.yml
+workflow-compose.yml
+Makefile
+make-vars.sh
+LICENSE.md
+README.md
+Jenkinsfile
+env_example
