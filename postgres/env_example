@@ -1,4 +1,4 @@
-#A variable can store multiple values to create multiple databases (separated by commas). You can specify one database
+# A variable can store multiple values to create multiple databases (separated by commas). You can specify one database
 DB_MULTIPLE="DB_SCHEMA,DB_SCHEMA_1,DB_SCHEMA_2"
 
 DB_USER="USERNAME"
