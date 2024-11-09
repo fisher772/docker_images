@@ -1,0 +1,35 @@
+---
+
+services:
+  vault:
+    image: fisher772/vault
+    container_name: vault
+    hostname: vault
+    restart: unless-stopped
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - vault_data:/var/atlassian/application-data/jira
+      - vault_nginx_conf:/data/nginx
+    environment:
+      TZ: ${EKB}
+      LE_FQDN: ${FQDN}
+      CONTAINER_ALIAS: ${C_ALIAS}
+      SERVER_ALIAS: ${S_ALIAS}
+      # VAULT_DEV_ROOT_TOKEN_ID: ${TOKEN}
+    networks:
+      - vault
+      - nginx
+
+
+volumes:
+  vault_data:
+    name: vault_data
+  vault_nginx_conf:
+    name: vault_nginx_conf
+
+networks:
+  nginx:
+    external: true
+  vault:
+    external: true

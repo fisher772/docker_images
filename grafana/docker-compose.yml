@@ -1,0 +1,34 @@
+---
+
+services:
+  grafana:
+    image: fisher772/grafana
+    container_name: grafana
+    hostname: grafana
+    restart: unless-stopped
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - grafana_conf:/etc/grafana/provisioning
+      - grafana_nginx_conf:/data/nginx
+    environment:
+      TZ: ${EKB}
+      LE_FQDN: ${FQDN}
+      CONTAINER_ALIAS: ${C_ALIAS}
+      SERVER_ALIAS: ${S_ALIAS}
+    networks:
+      - prom
+      - nginx
+
+volumes:
+  grafana_data:
+    name: grafana_data
+  grafana_conf:
+    name: grafana_conf
+  grafana_nginx_conf:
+    name: grafana_nginx_conf
+
+networks:
+  elk:
+    external: true
+  nginx:
+    external: true

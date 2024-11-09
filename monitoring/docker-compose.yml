@@ -1,0 +1,103 @@
+---
+
+services:
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    hostname: prometheus
+    restart: unless-stopped
+    volumes:
+      - prometheus_conf:/etc/prometheus
+      - prometheus_data:/prometheus
+      - prometheus_nginx_conf:/data/nginx
+    environment:
+      TZ: ${EKB}
+      LE_FQDN: ${FQDN_PROM}
+      CONTAINER_ALIAS: ${C_ALIAS_PROM}
+      SERVER_ALIAS: ${S_ALIAS_PROM}
+    networks:
+      - prom
+      - nginx
+
+  node-exporter:
+    image: prom/node-exporter
+    container_name: nexp
+    hostname: nexp
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.ignored-mount-points
+      - ^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)
+    environment:
+      TZ: ${EKB}
+    networks:
+      - prom
+
+  docker-exporter:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: dexp
+    hostname: dexp
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    environment:
+      TZ: ${EKB}
+    networks:
+      - prom
+
+  alertmanager:
+    image: prom/alertmanager
+    container_name: alert
+    hostname: alert
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    environment:
+      TZ: ${EKB}
+    networks:
+      - prom
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    hostname: grafana
+    restart: unless-stopped
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - grafana_conf:/etc/grafana/provisioning
+      - grafana_nginx_conf:/data/nginx
+    environment:
+      TZ: ${EKB}
+      LE_FQDN: ${FQDN_GRAF}
+      CONTAINER_ALIAS: ${C_ALIAS_GRAF}
+      SERVER_ALIAS: ${S_ALIAS_GRAF}
+    networks:
+      - prom
+      - nginx
+
+volumes:
+  prometheus_conf:
+  prometheus_data:
+  prometheus_nginx_conf:
+  grafana_data:
+  grafana_conf:
+  grafana_nginx_conf:
+
+networks:
+  prom:
+    external: true
+  nginx:
+    external: true

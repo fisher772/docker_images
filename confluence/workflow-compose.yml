@@ -9,8 +9,7 @@ services:
     volumes:
       - confluence_home:/var/atlassian/application-data/confluence
       - confluence_install:/opt/atlassian/confluence
-      - nginx_conf:/data/nginx/conf
-      - nginx_stream:/data/nginx/stream
+      - confluence_nginx_conf:/data/nginx
     environment:
       TZ: ${EKB}
       ATL_TOMCAT_CONTEXTPATH: ${URL_CONTEXTPATH}
@@ -35,10 +34,8 @@ volumes:
     name: confluence_home
   confluence_install:
     name: confluence_install
-  nginx_conf:
-    name: nginx_conf
-  nginx_stream:
-    name: nginx_stream
+  confluence_nginx_conf:
+    name: confluence_nginx_conf
 
 networks:
   nginx:

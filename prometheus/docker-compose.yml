@@ -1,0 +1,36 @@
+---
+
+services:
+  prometheus:
+    image: fisher772/prometheus
+    container_name: prometheus
+    hostname: prometheus
+    restart: unless-stopped
+    volumes:
+      - prometheus_conf:/etc/prometheus
+      - prometheus_data:/prometheus
+      - prometheus_nginx_conf:/data/nginx
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    environment:
+      TZ: ${EKB}
+      LE_FQDN: ${FQDN}
+      CONTAINER_ALIAS: ${C_ALIAS}
+      SERVER_ALIAS: ${S_ALIAS}
+    networks:
+      - prom
+      - nginx
+
+volumes:
+  prometheus_conf:
+    name: prometheus_conf
+  prometheus_data:
+    name: prometheus_data
+  prometheus_nginx_conf:
+    name: prometheus_nginx_conf
+
+networks:
+  prom:
+    external: true
+  nginx:
+    external: true

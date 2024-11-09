@@ -1,0 +1,26 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/nginx/elastic.access.log
+  fields:
+    service: elastic
+  tags: ["nginx-access"]
+
+- type: log
+  enabled: true
+  paths:
+    - /var/log/nginx/elastic.error.log
+  fields:
+    service: elastic
+  tags: ["nginx-error"]
+
+output.redis:
+  hosts: ["redis:6379"]
+  key: "filebeat"
+  db: 0
+
+setup.kibana:
+  host: "http://kibana:5601"
+  username: "${ELASTIC_USER}"
+  password: "${ELASTIC_PASSWORD}"

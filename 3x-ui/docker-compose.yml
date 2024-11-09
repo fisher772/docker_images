@@ -2,7 +2,7 @@
 
 services:
   3x-ui:
-    image: fisher772/3x-ui
+    image: fisher772/3xui
     container_name: 3xui
     hostname: 3xui
     restart: unless-stopped

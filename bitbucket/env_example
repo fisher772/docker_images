@@ -1,10 +1,26 @@
 EKB="YOUR_TIMEZONE"
+
+# This is the Tomcat context path for the Atlassian application. ${URL_CONTEXTPATH} specifies the path where your application will be accessible. 
+# For example, "/jira" for JIRA or "/confluence" for Confluence.
 URL_CONTEXTPATH="/CONTEXT"
-DB_TYPE="TYPE"
-DB_DRIVER="DRIVER"
+
+# The type of database being used. ${DB_TYPE} could be "postgresql", "mysql", "oracle", etc.
+DB_TYPE="postgres72"
+
+# The database driver for connecting to the database. ${DB_DRIVER} specifies the Java class driver for your database. 
+# For example, "org.postgresql.Driver" for PostgreSQL or "com.mysql.cj.jdbc.Driver" for MySQL.
+DB_DRIVER="org.postgresql.Driver"
+
+# The URL for the database connection. ${DB_URL} is the full connection URL for your database. 
+# For example, "jdbc:postgresql://localhost:5432/jiradb" for connecting to a PostgreSQL database.
 DB_URL="URL_CONNECTOR"
+
+# The username for the database connection. ${DB_USER} is the database user account that the Atlassian product will use to access the database.
 DB_USER="USERNAME"
+
+# The password for the database connection. ${DB_PASSWORD} is the password for the database user account used by the Atlassian product.
 DB_PASSWORD="PASSWORD"
+
 FQDN="YOUR_HOST_ADDRESS"
 C_ALIAS="alias-zone-upstream"
 S_ALIAS="<hostname>:<port>"

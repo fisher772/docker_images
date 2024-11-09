@@ -1,0 +1,116 @@
+---
+
+services:
+  elasticsearch:
+    image: elasticsearch:8.15.3
+    container_name: elasticsearch
+    hostname: elasticsearch
+    restart: unless-stopped
+    environment:
+      TZ: ${EKB}
+      discovery.type: single-node
+      ELASTIC_PASSWORD: ${ELS_PW}
+      xpack.license.self_generated.type: basic
+      bootstrap.memory_lock: true
+      ES_JAVA_OPTS: ${JAVA_OPTS}
+    volumes:
+      - els_data:/usr/share/elasticsearch/data
+    networks:
+      - elk
+
+  # kibana:
+  #   image: kibana:8.15.3
+  #   container_name: kibana
+  #   hostname: kibana
+  #   restart: unless-stopped
+  #   environment:
+  #     TZ: ${EKB}
+  #     ELASTIC_USER: ${ELS_USER}
+  #     ELASTIC_PASSWORD: ${ELS_PW}
+  #   volumes:
+  #     - kibana_conf:/usr/share/kibana/config
+  #   networks:
+  #     - elk
+  #     - nginx
+  #   depends_on:
+  #     - elasticsearch
+
+  kibana:
+    image: fisher772/kibana
+    container_name: kibana
+    hostname: kibana
+    restart: unless-stopped
+    environment:
+      TZ: ${EKB}
+      ELASTIC_USER: ${ELS_USER}
+      ELASTIC_PASSWORD: ${ELS_PW}
+      LE_FQDN: ${FQDN}
+      CONTAINER_ALIAS: ${C_ALIAS}
+      SERVER_ALIAS: ${S_ALIAS}
+    volumes:
+      - kibana_nginx_conf:/data/nginx
+      - kibana_conf:/usr/share/kibana/config
+    networks:
+      - elk
+      - nginx
+
+  logstash:
+    image: logstash:8.15.3
+    container_name: logstash
+    hostname: logstash
+    restart: unless-stopped
+    environment:
+      TZ: ${EKB}
+      ELASTIC_USER: ${ELS_USER}
+      ELASTIC_PASSWORD: ${ELS_PW}
+      LS_JAVA_OPTS: ${JAVA_OPTS}
+      xpack.monitoring.enabled: false
+    volumes:
+    - ./settings/logstash/patterns:/usr/share/logstash/patterns
+    - ./settings/logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+  redis:
+    image: fisher772/redis
+    container_name: redis
+    hostname: redis
+    restart: unless-stopped
+    environment:
+      TZ: ${EKB}
+    volumes:
+      - redis_conf:/usr/local/etc/redis/conf.d
+    networks:
+      - elk
+
+  filebeat:
+    image: elastic/filebeat:8.15.2
+    container_name: filebeat
+    hostname: filebeat
+    restart: unless-stopped
+    entrypoint: "filebeat -e -strict.perms=false"
+    environment:
+      TZ: ${EKB}
+      ELASTIC_USER: ${ELS_USER}
+      ELASTIC_PASSWORD: ${ELS_PW}
+    volumes:
+      - ./settings/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - nginx_logs:/var/log/nginx
+    networks:
+      - elk
+
+volumes:
+  nginx_logs:
+    external: true
+  kibana_nginx_conf:
+  kibana_conf:
+  redis_conf:
+  els_data:
+
+networks:
+  elk:
+    external: true
+  nginx:
+    external: true
