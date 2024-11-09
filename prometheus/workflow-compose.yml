@@ -2,7 +2,7 @@
 
 services:
   prometheus:
-    image: fisher772/prometheus
+    image: ${IMAGE}
     container_name: prometheus
     hostname: prometheus
     restart: unless-stopped
