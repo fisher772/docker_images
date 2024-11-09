@@ -1,0 +1,31 @@
+---
+
+services:
+  kibana:
+    image: fisher772/kibana
+    container_name: kibana
+    hostname: kibana
+    restart: unless-stopped
+    environment:
+      TZ: ${EKB}
+      ELASTIC_USER: ${ELS_USER}
+      ELASTIC_PASSWORD: ${ELS_PW}
+      LE_FQDN: ${FQDN}
+      CONTAINER_ALIAS: ${C_ALIAS}
+      SERVER_ALIAS: ${S_ALIAS}
+    volumes:
+      - kibana_nginx_conf:/data/nginx
+      - kibana_conf:/usr/share/kibana/config
+    networks:
+      - elk
+      - nginx
+
+volumes:
+  kibana_nginx_conf:
+  kibana_conf:
+
+networks:
+  elk:
+    external: true
+  nginx:
+    external: true

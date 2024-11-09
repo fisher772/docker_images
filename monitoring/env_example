@@ -1,0 +1,7 @@
+TZ="YOUR_TIMEZONE"
+FQDN_PROM="YOUR_HOST_ADDRESS"
+C_ALIAS_PROM="alias-zone-upstream"
+S_ALIAS_PROM="<hostname>:<port>"
+FQDN_GRAF="YOUR_HOST_ADDRESS"
+C_ALIAS_GRAF="alias-zone-upstream"
+S_ALIAS_GRAF="<hostname>:<port>"

@@ -1,0 +1,5 @@
+NGUSERNAME [a-zA-Z\.\@\-\+_%]+
+NGUSER %{NGUSERNAME}
+NGINXACCESS %{IPORHOST:client_ip} %{NGUSER:ident} %{NGUSER:auth} \[%{HTTPDATE:timestamp}\] "%{WORD:http_method} %{URIPATHPARAM:request} HTTP/%{NUMBER:http_version}" %{NUMBER:response_code} (?:%{NUMBER:bytes}|-) (?:"(?:%{URI:referrer}|-)"|%{QS:referrer}) %{QS:agent}
+
+NGINXERROR %{DATESTAMP:timestamp} \[%{LOGLEVEL:level}\] %{NUMBER:pid}#%{NUMBER:tid}: \*%{NUMBER:cid} %{GREEDYDATA:desc_error} while connecting to upstream, client: %{IPORHOST:client_ip}, server: %{IPORHOST:server}, request: "%{WORD:method} %{URIPATHPARAM:request} HTTP/%{NUMBER:http_version}", upstream: "%{URIPROTO:upstream_proto}://%{IPORHOST:upstream_host}:%{NUMBER:upstream_port}%{URIPATHPARAM:upstream_path}", host: "%{IPORHOST:host}", referrer: "%{DATA:referrer}"

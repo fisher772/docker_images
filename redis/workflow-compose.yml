@@ -1,0 +1,22 @@
+---
+
+services:
+  redis:
+    image: ${IMAGE}
+    container_name: redis
+    hostname: redis
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Yekaterinburg
+    volumes:
+      - redis_conf:/usr/local/etc/redis/conf.d
+    networks:
+      - redis
+
+volumes:
+  redis_conf:
+    external: true
+
+networks:
+  redis:
+    external: true
