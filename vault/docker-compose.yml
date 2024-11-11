@@ -30,6 +30,4 @@ volumes:
 
 networks:
   nginx:
-    external: true
   vault:
-    external: true

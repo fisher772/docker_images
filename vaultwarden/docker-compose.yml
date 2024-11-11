@@ -23,14 +23,11 @@ services:
 
 networks:
   vaultwarden:
-    external: true
   nginx:
-    external: true
 
 volumes:
   data:
   logs:
   nginx_ssl:
-    name: nginx_ssl
   vaultwarden_nginx_conf:
     name: vaultwarden_nginx_conf

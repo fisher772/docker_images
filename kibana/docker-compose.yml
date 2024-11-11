@@ -22,10 +22,10 @@ services:
 
 volumes:
   kibana_nginx_conf:
+    name: kibana_nginx_conf
   kibana_conf:
+    name: kibana_conf
 
 networks:
   elk:
-    external: true
   nginx:
-    external: true

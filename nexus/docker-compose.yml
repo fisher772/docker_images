@@ -28,6 +28,4 @@ volumes:
 
 networks:
   nginx:
-    external: true
   nexus:
-    external: true

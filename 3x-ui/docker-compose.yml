@@ -24,13 +24,10 @@ services:
 
 networks:
   3xui:
-    external: true
   nginx:
-    external: true
 
 volumes:
   db:
   nginx_ssl:
-    name: nginx_ssl
   xui_nginx_conf:
     name: 3xui_nginx_conf

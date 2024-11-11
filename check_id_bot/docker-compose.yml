@@ -18,3 +18,4 @@ networks:
 
 volumes:
   bot:
+    name: bot

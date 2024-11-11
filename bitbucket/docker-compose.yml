@@ -37,8 +37,5 @@ volumes:
 
 networks:
   nginx:
-    external: true
   bitbucket:
-    external: true
   postgres:
-    external: true
