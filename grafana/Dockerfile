@@ -7,8 +7,8 @@ RUN chmod +x /entrypoint.sh
 
 RUN mkdir -p /data/nginx/stream conf ssl
 
-COPY settings/service-nexus.conf /data/nginx/conf/service-nexus.conf
-COPY settings/stream/stream-nexus.conf /data/nginx/stream/stream-nexus.conf
+COPY settings/service-grafana.conf /data/nginx/conf/service-grafana.conf
+COPY settings/stream/stream-grafana.conf /data/nginx/stream/stream-grafana.conf
 
 CMD ["/entrypoint.sh"]
 
