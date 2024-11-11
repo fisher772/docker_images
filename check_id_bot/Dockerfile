@@ -1,9 +1,5 @@
 # "Build" image
-<<<<<<< HEAD
-FROM python:3.12-slim-bookworm as compile-image
-=======
 FROM python:3.12-slim-bookworm AS compile-image
->>>>>>> devops
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 COPY requirements.txt .
