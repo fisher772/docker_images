@@ -7,8 +7,8 @@ RUN chmod +x /entrypoint.sh
 
 RUN mkdir -p /data/nginx/stream conf ssl
 
-COPY settings/service-kibana.conf /data/nginx/conf/service-kibana.conf
-COPY settings/stream/stream-kibana.conf /data/nginx/stream/stream-kibana.conf
+COPY settings/service-grafana.conf /data/nginx/conf/service-grafana.conf
+COPY settings/stream/stream-grafana.conf /data/nginx/stream/stream-grafana.conf
 
 CMD ["/entrypoint.sh"]
 
