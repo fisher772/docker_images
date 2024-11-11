@@ -90,14 +90,19 @@ services:
 
 volumes:
   prometheus_conf:
+    name: prometheus_conf
   prometheus_data:
+    name: prometheus_data
   prometheus_nginx_conf:
+    name: prometheus_nginx_conf
   grafana_data:
+    name: grafana_data
   grafana_conf:
+    name: grafana_conf
   grafana_nginx_conf:
+    name: grafana_nginx_conf
 
 networks:
   prom:
-    external: true
   nginx:
     external: true

@@ -32,13 +32,10 @@ services:
 
 networks:
   jenkins:
-    external: true
   nginx:
-    external: true
 
 volumes:
   home:
   nginx_ssl:
-    name: nginx_ssl
   jenkins_nginx_conf:
     name: jenkins_nginx_conf

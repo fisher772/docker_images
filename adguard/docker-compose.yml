@@ -36,14 +36,11 @@ services:
 
 networks:
   adguard:
-    external: true
   nginx:
-    external: true
 
 volumes:
   work:
   conf:
   nginx_ssl:
-    name: nginx_ssl
   adguard_nginx_conf:
     name: adguard_nginx_conf

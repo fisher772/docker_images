@@ -39,8 +39,5 @@ volumes:
 
 networks:
   nginx:
-    external: true
   jira:
-    external: true
   postgres:
-    external: true

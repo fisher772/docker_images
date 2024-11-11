@@ -39,8 +39,5 @@ volumes:
 
 networks:
   nginx:
-    external: true
   confluence:
-    external: true
   postgres:
-    external: true

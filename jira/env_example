@@ -1,12 +1,4 @@
 EKB="YOUR_TIMEZONE"
-<<<<<<< HEAD
-URL_CONTEXTPATH="/CONTEXT"
-DB_TYPE="TYPE"
-DB_DRIVER="DRIVER"
-DB_URL="URL_CONNECTOR"
-DB_USER="USERNAME"
-DB_PASSWORD="PASSWORD"
-=======
 
 # This is the Tomcat context path for the Atlassian application. ${URL_CONTEXTPATH} specifies the path where your application will be accessible. 
 # For example, "/jira" for JIRA or "/confluence" for Confluence.
@@ -29,7 +21,6 @@ DB_USER="USERNAME"
 # The password for the database connection. ${DB_PASSWORD} is the password for the database user account used by the Atlassian product.
 DB_PASSWORD="PASSWORD"
 
->>>>>>> devops
 FQDN="YOUR_HOST_ADDRESS"
 C_ALIAS="alias-zone-upstream"
 S_ALIAS="<hostname>:<port>"

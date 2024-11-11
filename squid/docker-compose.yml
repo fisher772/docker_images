@@ -28,11 +28,9 @@ services:
 
 networks:
   squid:
-    external: true
 
 volumes:
   cache:
   logs:
   data:
   nginx_ssl:
-    name: nginx_ssl

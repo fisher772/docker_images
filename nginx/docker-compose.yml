@@ -30,7 +30,6 @@ services:
 
 networks:
   nginx:
-    external: true
 
 volumes:
   ssl:

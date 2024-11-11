@@ -9,11 +9,7 @@ services:
     cap_add:
       - IPC_LOCK
     volumes:
-<<<<<<< HEAD
-      - vault_data:/vault
-=======
       - vault_data:/var/atlassian/application-data/jira
->>>>>>> devops
       - vault_nginx_conf:/data/nginx
     environment:
       TZ: ${EKB}
@@ -34,6 +30,4 @@ volumes:
 
 networks:
   nginx:
-    external: true
   vault:
-    external: true

@@ -7,9 +7,5 @@ workflow-compose.yml
 Makefile
 make-vars.sh
 LICENSE.md
-<<<<<<< HEAD
-README.md
-=======
->>>>>>> devops
 Jenkinsfile
 env_example

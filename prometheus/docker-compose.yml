@@ -31,6 +31,4 @@ volumes:
 
 networks:
   prom:
-    external: true
   nginx:
-    external: true

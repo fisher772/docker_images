@@ -29,6 +29,4 @@ volumes:
 
 networks:
   elk:
-    external: true
   nginx:
-    external: true
