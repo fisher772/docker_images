@@ -1,5 +1,7 @@
 FROM sonatype/nexus3
 
+USER root
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
