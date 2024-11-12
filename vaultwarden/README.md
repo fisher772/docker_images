@@ -50,6 +50,7 @@ Environment:
 | LE_FQDN                     | -, Domain address     | FQDN                                     |
 | CONTAINER_ALIAS             | -, Zone Name          | C_ALIAS                                  |
 | SERVER_ALIAS                | -, Container address  | S_ALIAS                                  |
+| LOG_FILE                    | -, Path for VW logs   | LOGS                                     |
 
 
 Commands:
